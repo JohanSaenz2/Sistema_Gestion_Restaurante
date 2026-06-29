@@ -24,6 +24,7 @@ public class Mesa {
 	private Long mesaId;
 	@Column(name = "numero")
 	private int numMesa;
+	@Enumerated(EnumType.STRING)
 	@Column(name = "estado")
 	private EstadoMesa estado;
 	@OneToMany(mappedBy = "mesa")

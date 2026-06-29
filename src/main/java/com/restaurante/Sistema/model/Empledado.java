@@ -26,11 +26,14 @@ public class Empledado {
 	private String usuario;
 	@Column(name = "password_hash")
 	private String password;
+	@Enumerated(EnumType.STRING)
 	@Column(name = "rol")
 	private RolEmpleados rol;
 	
 	@OneToMany(mappedBy = "mesero")
 	@JsonManagedReference("empleado-comanda")
 	private List<Comanda> comandas = new ArrayList();
+	
+	
 
 }
