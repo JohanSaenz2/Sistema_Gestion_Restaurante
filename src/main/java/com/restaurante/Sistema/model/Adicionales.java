@@ -13,7 +13,7 @@ public class Adicionales {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "adicional_id")
-	private Long adicional_Id;
+	private Long adicionalId;
 	@Column(name = "nombre")
 	private String nombre;
 	@Column(name = "precio")

@@ -1,7 +1,9 @@
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.dto.GenerarComprobanteRequest;
 import com.restaurante.Sistema.model.Comprobante;
 import com.restaurante.Sistema.repository.ComprobanteRepository;
+import com.restaurante.Sistema.service.ComprobanteService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -10,9 +12,11 @@ import java.util.List;
 public class ComprobanteController {
 
 	private final ComprobanteRepository repo;
+	private final ComprobanteService service;
 
-	public ComprobanteController(ComprobanteRepository repo) {
+	public ComprobanteController(ComprobanteRepository repo, ComprobanteService service) {
 		this.repo = repo;
+		this.service = service;
 	}
 
 	@GetMapping
@@ -28,5 +32,10 @@ public class ComprobanteController {
 	@PostMapping
 	public Comprobante crear(@RequestBody Comprobante comprobante) {
 		return repo.save(comprobante);
+	}
+
+	@PostMapping("/generar")
+	public Comprobante generar(@RequestBody GenerarComprobanteRequest req) {
+		return service.generar(req.comandaId(), req.tipo(), req.clienteId());
 	}
 }

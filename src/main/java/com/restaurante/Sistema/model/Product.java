@@ -1,5 +1,7 @@
 package com.restaurante.Sistema.model;
 
+import com.restaurante.Sistema.Enum.Estacion;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import lombok.*;
@@ -25,8 +27,9 @@ public class Product {
 	@Column(name = "categoria", nullable = false)
 	private String categoria;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "estacion", nullable = false)
-	private String estacion;
+	private Estacion estacion;
 
 
 }

@@ -1,5 +1,5 @@
 package com.restaurante.Sistema.controller;
-import com.restaurante.Sistema.model.Empledado;
+import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.repository.EmpleadoRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,21 +12,21 @@ public class EmpleadoController {
     public EmpleadoController(EmpleadoRepository repo) { this.repo = repo; }
 
     @GetMapping
-    public List<Empledado> listarTodos() { return repo.findAll(); }
+    public List<Empleado> listarTodos() { return repo.findAll(); }
 
     @GetMapping("/{id}")
-    public Empledado buscarPorId(@PathVariable Long id) {
+    public Empleado buscarPorId(@PathVariable Long id) {
         return repo.findById(id).orElse(null);
     }
 
     @PostMapping
-    public Empledado crear(@RequestBody Empledado empleado) {
+    public Empleado crear(@RequestBody Empleado empleado) {
         return repo.save(empleado);
     }
 
     @PutMapping("/{id}")
-    public Empledado actualizar(@PathVariable Long id, @RequestBody Empledado datos) {
-        Empledado emp = repo.findById(id).orElse(null);
+    public Empleado actualizar(@PathVariable Long id, @RequestBody Empleado datos) {
+        Empleado emp = repo.findById(id).orElse(null);
         if (emp == null) return null;
         emp.setNombre(datos.getNombre());
         emp.setRol(datos.getRol());

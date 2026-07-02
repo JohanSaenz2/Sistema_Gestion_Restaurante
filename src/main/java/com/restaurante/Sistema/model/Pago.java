@@ -17,10 +17,11 @@ public class Pago {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pago_id")
-	private Long pago_id;
+	private Long pagoId;
 	@ManyToOne
 	@JoinColumn(name = "comprobante_id")
 	private Comprobante comprobante;
+	@Enumerated(EnumType.STRING)
 	@Column(name = "metodo")
 	private MetodoPago metodo;
 	@Column(name = "monto")

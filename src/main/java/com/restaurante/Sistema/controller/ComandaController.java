@@ -1,7 +1,8 @@
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.Enum.EstadoComanda;
 import com.restaurante.Sistema.model.Comanda;
-import com.restaurante.Sistema.repository.ComandaRepository;
+import com.restaurante.Sistema.service.ComandaService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -9,44 +10,39 @@ import java.util.List;
 @RequestMapping("/api/comandas")
 public class ComandaController {
 
-	private final ComandaRepository repo;
+	private final ComandaService service;
 
-	public ComandaController(ComandaRepository repo) {
-		this.repo = repo;
+	public ComandaController(ComandaService service) {
+		this.service = service;
 	}
 
 	@GetMapping
 	public List<Comanda> listarTodas() {
-		return repo.findAll();
+		return service.listar();
 	}
 
 	@GetMapping("/{id}")
 	public Comanda buscarPorId(@PathVariable Long id) {
-		return repo.findById(id).orElse(null);
+		return service.buscarPorId(id);
 	}
 
 	@GetMapping("/estado/{estado}")
-	public List<Comanda> porEstado(@PathVariable String estado) {
-		return repo.findByEstado(estado);
+	public List<Comanda> porEstado(@PathVariable EstadoComanda estado) {
+		return service.porEstado(estado);
 	}
 
 	@PostMapping
 	public Comanda crear(@RequestBody Comanda comanda) {
-		return repo.save(comanda);
+		return service.crear(comanda);
 	}
 
 	@PutMapping("/{id}")
 	public Comanda actualizar(@PathVariable Long id, @RequestBody Comanda datos) {
-		Comanda c = repo.findById(id).orElse(null);
-		if (c == null)
-			return null;
-		c.setEstado(datos.getEstado());
-		c.setTotal(datos.getTotal());
-		return repo.save(c);
+		return service.actualizar(id, datos);
 	}
 
 	@DeleteMapping("/{id}")
 	public void eliminar(@PathVariable Long id) {
-		repo.deleteById(id);
+		service.eliminar(id);
 	}
 }

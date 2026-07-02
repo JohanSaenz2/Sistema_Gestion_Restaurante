@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "empleados", schema = "restaurante")
-public class Empledado {
+public class Empleado {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +29,9 @@ public class Empledado {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "rol")
 	private RolEmpleados rol;
-	
+
 	@OneToMany(mappedBy = "mesero")
 	@JsonManagedReference("empleado-comanda")
 	private List<Comanda> comandas = new ArrayList();
-	
-	
 
 }

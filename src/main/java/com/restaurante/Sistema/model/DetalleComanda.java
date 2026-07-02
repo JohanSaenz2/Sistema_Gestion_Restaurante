@@ -2,6 +2,9 @@ package com.restaurante.Sistema.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.restaurante.Sistema.Enum.EstadoItem;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +22,7 @@ public class DetalleComanda {
 
 	@ManyToOne
 	@JoinColumn(name = "comanda_id")
+	@JsonBackReference("comanda-detalle")
 	private Comanda comanda;
 
 	@ManyToOne
@@ -33,5 +37,9 @@ public class DetalleComanda {
 
 	@Column(name = "notas")
 	private String notas;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "estado")
+	private EstadoItem estado = EstadoItem.pendiente;
 
 }

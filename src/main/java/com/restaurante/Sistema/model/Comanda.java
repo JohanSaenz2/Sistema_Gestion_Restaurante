@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.restaurante.Sistema.Enum.EstadoComanda;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,10 +34,11 @@ public class Comanda {
     @ManyToOne
     @JoinColumn(name = "empleado_id")
     @JsonBackReference("empleado-comanda") 
-    private Empledado mesero;
+    private Empleado mesero;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private String estado;
+    private EstadoComanda estado;
 
     @Column(name = "total")
     private BigDecimal total;
