@@ -1,7 +1,11 @@
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.dto.PagoDescuentoRequest;
+import com.restaurante.Sistema.dto.PagoRequest;
 import com.restaurante.Sistema.model.Pago;
 import com.restaurante.Sistema.repository.PagoRepository;
+import com.restaurante.Sistema.service.PagoService;
+
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -9,24 +13,38 @@ import java.util.List;
 @RequestMapping("/api/pagos")
 public class PagoController {
 
-	private final PagoRepository repo;
+ private final PagoService service;  // ← ahora usa Service
+ private final PagoRepository repo;
 
-	public PagoController(PagoRepository repo) {
-		this.repo = repo;
-	}
+ public PagoController(PagoService service, PagoRepository repo) {
+     this.service = service;
+     this.repo = repo;
+ }
 
-	@GetMapping
-	public List<Pago> listarTodos() {
-		return repo.findAll();
-	}
+ @GetMapping
+ public List<Pago> listarTodos() { return repo.findAll(); }
 
-	@GetMapping("/{id}")
-	public Pago buscarPorId(@PathVariable Long id) {
-		return repo.findById(id).orElse(null);
-	}
+ @GetMapping("/{id}")
+ public Pago buscarPorId(@PathVariable Long id) {
+     return repo.findById(id).orElse(null);
+ }
+ @PostMapping("/procesar")
+ public Pago procesar(@RequestBody PagoRequest req) {
+     return service.procesarPago(
+         req.comprobanteId(),
+         req.metodo(),
+         req.propina()
+     );
+ }
 
-	@PostMapping
-	public Pago crear(@RequestBody Pago pago) {
-		return repo.save(pago);
-	}
+ @PostMapping("/procesar-descuento")
+ public Pago procesarDescuento(@RequestBody PagoDescuentoRequest req) {
+     return service.procesarPagoConDescuento(
+         req.comprobanteId(),
+         req.metodo(),
+         req.propina(),
+         req.porcentaje(),
+         req.motivo()
+     );
+ }
 }

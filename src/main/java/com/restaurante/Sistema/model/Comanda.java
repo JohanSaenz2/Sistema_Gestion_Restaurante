@@ -34,7 +34,7 @@ public class Comanda {
     @ManyToOne
     @JoinColumn(name = "empleado_id")
     @JsonBackReference("empleado-comanda") 
-    private Empleado mesero;
+    private Empleado empleado;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
