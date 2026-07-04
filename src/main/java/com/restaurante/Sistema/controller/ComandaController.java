@@ -40,7 +40,15 @@ public class ComandaController {
 	public Comanda actualizar(@PathVariable Long id, @RequestBody Comanda datos) {
 		return service.actualizar(id, datos);
 	}
-
+	
+	@PutMapping("/{id}/cancelar")
+	public Comanda cancelar(@PathVariable Long id) {
+	    return service.cancelar(id);
+	}
+	@PutMapping("/{id}/avanzar")
+	public Comanda avanzar(@PathVariable Long id) {
+	    return service.avanzarEstado(id);
+	}
 	@DeleteMapping("/{id}")
 	public void eliminar(@PathVariable Long id) {
 		service.eliminar(id);

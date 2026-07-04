@@ -1,5 +1,7 @@
 package com.restaurante.Sistema.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +19,7 @@ public class Adicionales {
 	@Column(name = "nombre")
 	private String nombre;
 	@Column(name = "precio")
-	private double precio;
+	private BigDecimal precio;
 	@Column(name = "aplica_a")
 	private String aplicaA;
 
