@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/pagos")
 public class PagoController {
 
- private final PagoService service;  // ← ahora usa Service
+ private final PagoService service;  
  private final PagoRepository repo;
 
  public PagoController(PagoService service, PagoRepository repo) {

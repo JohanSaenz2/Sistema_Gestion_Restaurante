@@ -1,10 +1,14 @@
 package com.restaurante.Sistema.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.restaurante.Sistema.Enum.TipoComprobante;
 import com.restaurante.Sistema.config.ImpuestoConfig;
+import com.restaurante.Sistema.dto.ComprobanteResponse;
 import com.restaurante.Sistema.exception.ComandaInvalidaException;
 import com.restaurante.Sistema.model.Cliente;
 import com.restaurante.Sistema.model.Comanda;
@@ -45,8 +49,9 @@ public class ComprobanteService {
 		factory.init(PAQUETE_FACTORIES);
 	}
 
+
 	@Transactional
-	public Comprobante generar(Long comandaId, TipoComprobante tipo, Long clienteId) {
+	public ComprobanteResponse generar(Long comandaId, TipoComprobante tipo, Long clienteId) {
 		Comanda comanda = comandaRepo.findById(comandaId)
 				.orElseThrow(() -> new ComandaInvalidaException("No existe la comanda " + comandaId));
 
@@ -56,7 +61,20 @@ public class ComprobanteService {
 		ComprobanteFactory f = factory.crear(tipo.name());
 		f.setTasaIva(impuestoConfig.getIva());
 
-		Comprobante comprobante = f.crear(comanda, cliente);
-		return comprobanteRepo.save(comprobante);
+		Comprobante c = f.crear(comanda, cliente);
+		comprobanteRepo.save(c);
+		return new ComprobanteResponse( c.getId(),
+		        c.getComanda().getId(),
+		        c.getCliente() != null ? c.getCliente().getClienteID() : null,
+		        c.getCliente() != null ? c.getCliente().getNombre() : "Consumidor final",
+		        c.getCliente() != null ? c.getCliente().getIdentificacion() : null,
+		        c.getTipo(),
+		        c.getNumero(),
+		        c.getSubtotal(),
+		        c.getDescuento(),
+		        c.getIva(),
+		        c.getPropina(),
+		        c.getTotal(),
+		        c.getFechaEmision());
 	}
 }

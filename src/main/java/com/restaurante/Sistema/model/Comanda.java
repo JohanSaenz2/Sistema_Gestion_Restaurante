@@ -47,6 +47,5 @@ public class Comanda {
     private LocalDateTime fecha;
 
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL)
-    @JsonManagedReference("comanda-detalle")  
     private List<DetalleComanda> detalles = new ArrayList<>();
 }

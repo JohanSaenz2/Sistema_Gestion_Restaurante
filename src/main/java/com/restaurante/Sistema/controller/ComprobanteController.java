@@ -1,5 +1,6 @@
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.dto.ComprobanteResponse;
 import com.restaurante.Sistema.dto.GenerarComprobanteRequest;
 import com.restaurante.Sistema.model.Comprobante;
 import com.restaurante.Sistema.repository.ComprobanteRepository;
@@ -35,7 +36,7 @@ public class ComprobanteController {
 	}
 
 	@PostMapping("/generar")
-	public Comprobante generar(@RequestBody GenerarComprobanteRequest req) {
+	public ComprobanteResponse generar(@RequestBody GenerarComprobanteRequest req) {
 		return service.generar(req.comandaId(), req.tipo(), req.clienteId());
 	}
 }

@@ -30,7 +30,7 @@ public class Empleado {
 	@Column(name = "rol")
 	private RolEmpleados rol;
 
-	@OneToMany(mappedBy = "mesero")
+	@OneToMany(mappedBy = "empleado")
 	@JsonManagedReference("empleado-comanda")
 	private List<Comanda> comandas = new ArrayList();
 

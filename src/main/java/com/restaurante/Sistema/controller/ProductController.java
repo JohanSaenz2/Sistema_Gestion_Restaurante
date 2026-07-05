@@ -15,15 +15,20 @@ public class ProductController {
         this.repo = repo;
     }
 
-    // GET http://localhost:8080/api/productos
+   
     @GetMapping
     public List<Product> listarTodos() {
         return repo.findAll();
     }
 
-    // GET http://localhost:8080/api/productos/1
+  
     @GetMapping("/{id}")
     public Product buscarPorId(@PathVariable Long id) {
         return repo.findById(id).orElse(null);
+    }
+    
+    @PostMapping
+    public Product crear(@RequestBody Product producto) {
+        return repo.save(producto);  // o service.guardar(producto) si ya tienes el service
     }
 }

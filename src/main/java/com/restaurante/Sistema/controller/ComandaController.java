@@ -1,6 +1,8 @@
 package com.restaurante.Sistema.controller;
 
 import com.restaurante.Sistema.Enum.EstadoComanda;
+import com.restaurante.Sistema.dto.ComandaRequest;
+import com.restaurante.Sistema.dto.ComandaResponse;
 import com.restaurante.Sistema.model.Comanda;
 import com.restaurante.Sistema.service.ComandaService;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +19,8 @@ public class ComandaController {
 	}
 
 	@GetMapping
-	public List<Comanda> listarTodas() {
-		return service.listar();
+	public List<ComandaResponse> listarTodas() {
+		return service.listarTodas();
 	}
 
 	@GetMapping("/{id}")
@@ -32,7 +34,7 @@ public class ComandaController {
 	}
 
 	@PostMapping
-	public Comanda crear(@RequestBody Comanda comanda) {
+	public ComandaResponse crear(@RequestBody ComandaRequest comanda) {
 		return service.crear(comanda);
 	}
 

@@ -20,13 +20,15 @@ public class MesaController {
     }
 
     @PostMapping
-    public Mesa crear(@RequestBody Mesa mesa) { return repo.save(mesa); }
+    public Mesa crear(@RequestBody Mesa mesa) { 
+    	return repo.save(mesa); 
+    	}
 
     @PutMapping("/{id}")
     public Mesa actualizar(@PathVariable Long id, @RequestBody Mesa datos) {
         Mesa mesa = repo.findById(id).orElse(null);
         if (mesa == null) return null;
-        mesa.setNumMesa(datos.getNumMesa());
+        mesa.setNumero(datos.getNumero());
         mesa.setEstado(datos.getEstado());
         return repo.save(mesa);
     }

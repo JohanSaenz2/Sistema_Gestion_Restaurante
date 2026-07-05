@@ -12,9 +12,14 @@ import com.restaurante.Sistema.patrones.state.TransicionInvalidaException;
 @RestControllerAdvice
 public class ManejadorExcepciones {
 
-	@ExceptionHandler({ ClienteRequeridoException.class, ComandaInvalidaException.class,
-			TransicionInvalidaException.class, IllegalArgumentException.class })
+	@ExceptionHandler({
+	    ClienteRequeridoException.class,
+	    ComandaInvalidaException.class,
+	    IllegalArgumentException.class,
+	    TransicionInvalidaException.class  
+	})
 	public ResponseEntity<Map<String, String>> manejarReglasDeNegocio(RuntimeException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+	    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	        .body(Map.of("error", ex.getMessage()));
 	}
 }

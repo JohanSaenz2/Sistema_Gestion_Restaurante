@@ -1,6 +1,7 @@
 // service/ComandaService.java
 package com.restaurante.Sistema.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -8,9 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.restaurante.Sistema.Enum.EstadoComanda;
 import com.restaurante.Sistema.Enum.EstadoMesa;
+import com.restaurante.Sistema.dto.ComandaRequest;
+import com.restaurante.Sistema.dto.ComandaResponse;
 import com.restaurante.Sistema.model.Comanda;
+import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.model.Mesa;
 import com.restaurante.Sistema.repository.ComandaRepository;
+import com.restaurante.Sistema.repository.EmpleadoRepository;
 import com.restaurante.Sistema.repository.MesaRepository;
 
 @Service
@@ -18,14 +23,16 @@ public class ComandaService {
 
 	private final ComandaRepository repo;
 	private final MesaRepository mesaRepo;
+	private final EmpleadoRepository emplRepo;
 
-	public ComandaService(ComandaRepository repo, MesaRepository mesaRepo) {
+	public ComandaService(ComandaRepository repo, MesaRepository mesaRepo, EmpleadoRepository emplRepo) {
 		this.repo = repo;
 		this.mesaRepo = mesaRepo;
+		this.emplRepo = emplRepo;
 	}
 
-	public List<Comanda> listar() {
-		return repo.findAll();
+	public List<ComandaResponse> listarTodas() {
+		return repo.findAll().stream().map(this::toResponse).toList();
 	}
 
 	public Comanda buscarPorId(Long id) {
@@ -36,18 +43,32 @@ public class ComandaService {
 		return repo.findByEstado(estado);
 	}
 
-	public Comanda crear(Comanda comanda) {
+	public ComandaResponse crear(ComandaRequest comanda2) {
+
+		Mesa mesa = mesaRepo.findById(comanda2.mesaId()).orElse(null);
+		Empleado empleado = emplRepo.findById(comanda2.empleadoId()).orElse(null);
+
+		if (mesa == null || empleado == null)
+			return null;
+
+		Comanda comanda = new Comanda();
+		comanda.setMesa(mesa);
+		comanda.setEmpleado(empleado);
 		comanda.setEstado(EstadoComanda.pendiente);
 		comanda.setFecha(LocalDateTime.now());
+		comanda.setTotal(BigDecimal.ZERO);
 
-		Mesa mesa = mesaRepo.findById(comanda.getMesa().getMesaId()).orElse(null);
+		mesa.setEstado(EstadoMesa.ocupada);
+		mesaRepo.save(mesa);
 
-		if (mesa != null) {
-			mesa.setEstado(EstadoMesa.ocupada);
-			mesaRepo.save(mesa);
-		}
+		Comanda guardada = repo.save(comanda);
 
-		return repo.save(comanda);
+		return toResponse(guardada);
+	}
+
+	private ComandaResponse toResponse(Comanda c) {
+		return new ComandaResponse(c.getId(), c.getEstado(), c.getTotal(), c.getFecha(), c.getMesa().getMesaId(),
+				c.getMesa().getNumero(), c.getEmpleado().getId(), c.getEmpleado().getNombre());
 	}
 
 	public Comanda avanzarEstado(Long id) {

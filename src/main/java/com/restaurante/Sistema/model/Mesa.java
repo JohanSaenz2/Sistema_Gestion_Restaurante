@@ -23,7 +23,7 @@ public class Mesa {
 	@Column(name = "mesa_id")
 	private Long mesaId;
 	@Column(name = "numero")
-	private int numMesa;
+	private Integer numero;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "estado")
 	private EstadoMesa estado;
