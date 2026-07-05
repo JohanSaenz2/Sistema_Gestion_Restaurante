@@ -1,5 +1,5 @@
-// service/pago/ContextoPago.java
-package com.restaurante.Sistema.service.pago;
+// patrones/strategy/ContextoPago.java
+package com.restaurante.Sistema.patrones.strategy;
 
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;

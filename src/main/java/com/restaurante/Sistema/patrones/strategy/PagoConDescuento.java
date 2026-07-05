@@ -1,4 +1,4 @@
-package com.restaurante.Sistema.service.pago;
+package com.restaurante.Sistema.patrones.strategy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

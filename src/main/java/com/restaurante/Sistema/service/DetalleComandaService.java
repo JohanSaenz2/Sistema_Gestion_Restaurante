@@ -68,7 +68,7 @@ public class DetalleComandaService {
 
 		DetalleComanda detalle = new DetalleComanda();
 		detalle.setComanda(comanda);
-		detalle.setProductoId(producto);
+		detalle.setProducto(producto);
 		detalle.setCantidad(cantidad);
 		detalle.setSubtotal(subtotal);
 		detalle.setNotas(notas.toString());
@@ -78,8 +78,8 @@ public class DetalleComandaService {
 		return new DetalleComandaResponse(
 		    guardado.getId(),
 		    guardado.getComanda().getId(),
-		    guardado.getProductoId().getId(),
-		    guardado.getProductoId().getNombre(),
+		    guardado.getProducto().getId(),
+		    guardado.getProducto().getNombre(),
 		    guardado.getCantidad(),
 		    guardado.getSubtotal(),
 		    guardado.getNotas(),
@@ -115,6 +115,7 @@ public class DetalleComandaService {
 	        case "listo"    -> contexto.marcarListo();
 	        case "entregar" -> contexto.entregar();
 	        case "cancelar" -> contexto.cancelar();
+	        default -> throw new IllegalArgumentException("Acción desconocida: " + accion);
 	    }
 
 	    detalle.setEstado(contexto.getEstadoItem());
@@ -124,14 +125,14 @@ public class DetalleComandaService {
 	        detalle.getId(),
 	        detalle.getComanda().getId(),
 	        detalle.getEstado(),
-	        detalle.getProductoId().getEstacion()
+	        detalle.getProducto().getEstacion()
 	    ));
 
 	    return new DetalleComandaResponse(
 	        detalle.getId(),
 	        detalle.getComanda().getId(),
-	        detalle.getProductoId().getId(),
-	        detalle.getProductoId().getNombre(),
+	        detalle.getProducto().getId(),
+	        detalle.getProducto().getNombre(),
 	        detalle.getCantidad(),
 	        detalle.getSubtotal(),
 	        detalle.getNotas(),
