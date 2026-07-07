@@ -1,4 +1,4 @@
-package com.restaurante.Sistema.service.pago;
+package com.restaurante.Sistema.patrones.strategy;
 
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;

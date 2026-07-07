@@ -1,7 +1,10 @@
-package com.restaurante.Sistema.service.pago;
+package com.restaurante.Sistema.patrones.strategy;
+
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 public class PagoEfectivo implements StrategyPago{
 
 	@Override
@@ -11,8 +14,8 @@ public class PagoEfectivo implements StrategyPago{
 
 	@Override
 	public String getNameMethod() {
-		return null;
+		return "efectivo";
 	}
 
-	
+
 }

@@ -20,8 +20,8 @@ public class DetalleComandaController {
     @PostMapping
     public DetalleComandaResponse crear(@RequestBody DetalleComandaRequest req) {
         return service.crearDetalle(
-            req.comandaId(),
             req.productoId(),
+            req.comandaId(),
             req.cantidad(),
             req.adicionalIds()
         );

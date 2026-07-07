@@ -1,4 +1,5 @@
 package com.restaurante.Sistema.controller;
+import com.restaurante.Sistema.dto.MesaResponse;
 import com.restaurante.Sistema.model.Mesa;
 import com.restaurante.Sistema.repository.MesaRepository;
 import org.springframework.web.bind.annotation.*;
@@ -12,27 +13,33 @@ public class MesaController {
     public MesaController(MesaRepository repo) { this.repo = repo; }
 
     @GetMapping
-    public List<Mesa> listarTodas() { return repo.findAll(); }
+    public List<MesaResponse> listarTodas() {
+        return repo.findAll().stream().map(this::toResponse).toList();
+    }
 
     @GetMapping("/{id}")
-    public Mesa buscarPorId(@PathVariable Long id) {
-        return repo.findById(id).orElse(null);
+    public MesaResponse buscarPorId(@PathVariable Long id) {
+        return repo.findById(id).map(this::toResponse).orElse(null);
     }
 
     @PostMapping
-    public Mesa crear(@RequestBody Mesa mesa) { 
-    	return repo.save(mesa); 
-    	}
+    public MesaResponse crear(@RequestBody Mesa mesa) {
+        return toResponse(repo.save(mesa));
+    }
 
     @PutMapping("/{id}")
-    public Mesa actualizar(@PathVariable Long id, @RequestBody Mesa datos) {
+    public MesaResponse actualizar(@PathVariable Long id, @RequestBody Mesa datos) {
         Mesa mesa = repo.findById(id).orElse(null);
         if (mesa == null) return null;
         mesa.setNumero(datos.getNumero());
         mesa.setEstado(datos.getEstado());
-        return repo.save(mesa);
+        return toResponse(repo.save(mesa));
     }
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) { repo.deleteById(id); }
+
+    private MesaResponse toResponse(Mesa m) {
+        return new MesaResponse(m.getMesaId(), m.getNumero(), m.getEstado());
+    }
 }

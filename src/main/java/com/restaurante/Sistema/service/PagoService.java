@@ -6,7 +6,7 @@ import com.restaurante.Sistema.model.Pago;
 import com.restaurante.Sistema.Enum.MetodoPago;
 import com.restaurante.Sistema.repository.ComprobanteRepository;
 import com.restaurante.Sistema.repository.PagoRepository;
-import com.restaurante.Sistema.service.pago.ContextoPago;
+import com.restaurante.Sistema.patrones.strategy.ContextoPago;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
@@ -47,6 +47,7 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
+        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
     }
 
@@ -80,6 +81,7 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
+        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
     }
 }

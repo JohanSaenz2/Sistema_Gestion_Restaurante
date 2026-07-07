@@ -1,4 +1,5 @@
 package com.restaurante.Sistema.controller;
+import com.restaurante.Sistema.dto.EmpleadoResponse;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.repository.EmpleadoRepository;
 import org.springframework.web.bind.annotation.*;
@@ -12,27 +13,33 @@ public class EmpleadoController {
     public EmpleadoController(EmpleadoRepository repo) { this.repo = repo; }
 
     @GetMapping
-    public List<Empleado> listarTodos() { return repo.findAll(); }
+    public List<EmpleadoResponse> listarTodos() {
+        return repo.findAll().stream().map(this::toResponse).toList();
+    }
 
     @GetMapping("/{id}")
-    public Empleado buscarPorId(@PathVariable Long id) {
-        return repo.findById(id).orElse(null);
+    public EmpleadoResponse buscarPorId(@PathVariable Long id) {
+        return repo.findById(id).map(this::toResponse).orElse(null);
     }
 
     @PostMapping
-    public Empleado crear(@RequestBody Empleado empleado) {
-        return repo.save(empleado);
+    public EmpleadoResponse crear(@RequestBody Empleado empleado) {
+        return toResponse(repo.save(empleado));
     }
 
     @PutMapping("/{id}")
-    public Empleado actualizar(@PathVariable Long id, @RequestBody Empleado datos) {
+    public EmpleadoResponse actualizar(@PathVariable Long id, @RequestBody Empleado datos) {
         Empleado emp = repo.findById(id).orElse(null);
         if (emp == null) return null;
         emp.setNombre(datos.getNombre());
         emp.setRol(datos.getRol());
-        return repo.save(emp);
+        return toResponse(repo.save(emp));
     }
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) { repo.deleteById(id); }
+
+    private EmpleadoResponse toResponse(Empleado e) {
+        return new EmpleadoResponse(e.getId(), e.getNombre(), e.getUsuario(), e.getRol());
+    }
 }
