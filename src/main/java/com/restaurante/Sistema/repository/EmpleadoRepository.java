@@ -7,5 +7,5 @@ import com.restaurante.Sistema.model.Empleado;
 
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
-
+	Empleado findByUsuarioAndPassword(String user, String password);
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante — Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: #16213e;
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            color: #e2b04a;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #bdc3c7;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f3460;
+            border: 1px solid #1a4a7a;
+            border-radius: 8px;
+            color: #ecf0f1;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #e2b04a;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #e2b04a;
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: #d4a03a; }
+
+        .error {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <h1>🍽 Restaurante</h1>
+        <p>Sistema de Comandas</p>
+    </div>
+
+    <!-- Mensaje de error si las credenciales son incorrectas -->
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+
+    <form method="post" action="/login">
+        <div class="form-group">
+            <label>Usuario</label>
+            <input type="text" name="usuario" placeholder="Ingresa tu usuario" required autofocus/>
+        </div>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required/>
+        </div>
+        <button type="submit" class="btn">Ingresar</button>
+    </form>
+</div>
+</body>
+</html>
