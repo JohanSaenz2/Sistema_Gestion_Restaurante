@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+
+        .navbar {
+            background: #16213e;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2980b9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar h1 { color: #3498db; font-size: 20px; }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+
+        .logout {
+            color: #e74c3c;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid #e74c3c;
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+
+        .logout:hover { background: #e74c3c; color: white; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 20px 24px 0;
+            border-bottom: 1px solid #0f3460;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .tab-btn:hover { color: #ecf0f1; }
+
+        /* Contenido de tabs */
+        .tab-content { display: none; padding: 24px; }
+        .tab-content.active { display: block; }
+
+        /* Cards de resumen */
+        .resumen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .resumen-card {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-top: 3px solid;
+        }
+
+        .resumen-card.azul  { border-color: #3498db; }
+        .resumen-card.verde { border-color: #27ae60; }
+        .resumen-card.rojo  { border-color: #e74c3c; }
+        .resumen-card.naranja { border-color: #e67e22; }
+
+        .resumen-numero {
+            font-size: 36px;
+            font-weight: 700;
+            color: #e2b04a;
+        }
+
+        .resumen-label {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 6px;
+        }
+
+        /* Tabla */
+        .tabla-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            background: #0f3460;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            color: #bdc3c7;
+            font-weight: 600;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #0f3460;
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover { background: #16213e; }
+
+        tbody td {
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+
+        /* Badges de estado */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pendiente   { background: rgba(231,76,60,0.2);  color: #e74c3c; }
+        .badge-preparacion { background: rgba(243,156,18,0.2); color: #f39c12; }
+        .badge-listo       { background: rgba(52,152,219,0.2); color: #3498db; }
+        .badge-entregada   { background: rgba(39,174,96,0.2);  color: #27ae60; }
+        .badge-pagada      { background: rgba(155,89,182,0.2); color: #9b59b6; }
+        .badge-cancelada   { background: rgba(127,140,141,0.2);color: #95a5a6; }
+        .badge-libre       { background: rgba(39,174,96,0.2);  color: #27ae60; }
+        .badge-ocupada     { background: rgba(231,76,60,0.2);  color: #e74c3c; }
+        .badge-reservada   { background: rgba(243,156,18,0.2); color: #f39c12; }
+
+        /* Botones de acción */
+        .btn-accion {
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 4px;
+            transition: all 0.15s;
+        }
+
+        .btn-eliminar {
+            background: rgba(231,76,60,0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .btn-eliminar:hover { background: #e74c3c; color: white; }
+
+        /* Formulario nuevo elemento */
+        .form-nuevo {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-nuevo h3 {
+            font-size: 15px;
+            color: #3498db;
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #bdc3c7;
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f3460;
+            border: 1px solid #1a4a7a;
+            border-radius: 6px;
+            color: #ecf0f1;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn-agregar {
+            padding: 9px 20px;
+            background: #3498db;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-agregar:hover { background: #2980b9; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #27ae60;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>⚙️ Administración</h1>
+    <div class="navbar-right">
+        <span th:text="'Hola, ' + ${empleado.nombre}">Admin</span>
+        <a href="/mesas" style="color:#3498db; text-decoration:none;
+           font-size:13px; border:1px solid #3498db; padding:5px 12px;
+           border-radius:6px;">Ver sistema</a>
+        <a href="/logout" class="logout">Salir</a>
+    </div>
+</nav>
+
+<!-- Tabs -->
+<div class="tabs">
+    <button class="tab-btn active" onclick="cambiarTab('resumen', this)">
+        📊 Resumen
+    </button>
+    <button class="tab-btn" onclick="cambiarTab('comandas', this)">
+        📋 Comandas
+    </button>
+    <button class="tab-btn" onclick="cambiarTab('empleados', this)">
+        👤 Empleados
+    </button>
+    <button class="tab-btn" onclick="cambiarTab('mesas', this)">
+        🪑 Mesas
+    </button>
+    <button class="tab-btn" onclick="cambiarTab('productos', this)">
+        🍽 Productos
+    </button>
+    <button class="tab-btn" onclick="cambiarTab('adicionales', this)">
+        ➕ Adicionales
+    </button>
+</div>
+
+<!-- TAB RESUMEN -->
+<div class="tab-content active" id="tab-resumen">
+    <div class="resumen-grid">
+        <div class="resumen-card azul">
+            <div class="resumen-numero"
+                 th:text="${#lists.size(comandas)}">0</div>
+            <div class="resumen-label">Total comandas</div>
+        </div>
+        <div class="resumen-card verde">
+            <div class="resumen-numero"
+                 th:text="${#lists.size(empleados)}">0</div>
+            <div class="resumen-label">Empleados</div>
+        </div>
+        <div class="resumen-card rojo">
+            <div class="resumen-numero"
+                 th:text="${#lists.size(mesas)}">0</div>
+            <div class="resumen-label">Mesas</div>
+        </div>
+        <div class="resumen-card naranja">
+            <div class="resumen-numero"
+                 th:text="${#lists.size(productos)}">0</div>
+            <div class="resumen-label">Productos en menú</div>
+        </div>
+    </div>
+</div>
+
+<!-- TAB COMANDAS -->
+<div class="tab-content" id="tab-comandas">
+    <div class="tabla-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mesa</th>
+                    <th>Mesero</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="c : ${comandas}">
+                    <td th:text="${c.id}">1</td>
+                    <td th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</td>
+                    <td th:text="${c.empleado.nombre}">Carlos</td>
+                    <td>
+                        <span th:class="'badge badge-' + ${c.estado.name()}"
+                              th:text="${c.estado.name()}">
+                            pendiente
+                        </span>
+                    </td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(c.total, 1, 2)}">
+                        $0.00
+                    </td>
+                    <td th:text="${#temporals.format(c.fecha, 'dd/MM HH:mm')}">
+                        01/07 12:30
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB EMPLEADOS -->
+<div class="tab-content" id="tab-empleados">
+
+    <div class="form-nuevo">
+        <h3>+ Nuevo empleado</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="empNombre" placeholder="Nombre completo"/>
+            </div>
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" id="empUsuario" placeholder="usuario"/>
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="empPassword" placeholder="contraseña"/>
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select id="empRol">
+                    <option value="mesero">Mesero</option>
+                    <option value="cocinero">Cocinero</option>
+                    <option value="bartender">Bartender</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-agregar" onclick="crearEmpleado()">
+            Agregar empleado
+        </button>
+    </div>
+
+    <div class="tabla-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${empleados}">
+                    <td th:text="${e.id}">1</td>
+                    <td th:text="${e.nombre}">Carlos</td>
+                    <td th:text="${e.usuario}">cvega</td>
+                    <td th:text="${e.rol}">mesero</td>
+                    <td>
+                        <button class="btn-accion btn-eliminar"
+                                th:onclick="'eliminar(\'empleados\',' + ${e.id} + ')'">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB MESAS -->
+<div class="tab-content" id="tab-mesas">
+
+    <div class="form-nuevo">
+        <h3>+ Nueva mesa</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Número</label>
+                <input type="number" id="mesaNumero" placeholder="Ej: 7" min="1"/>
+            </div>
+        </div>
+        <button class="btn-agregar" onclick="crearMesa()">
+            Agregar mesa
+        </button>
+    </div>
+
+    <div class="tabla-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Número</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${mesas}">
+                    <td th:text="${m.mesaId}">1</td>
+                    <td th:text="${m.numero}">1</td>
+                    <td>
+                        <span th:class="'badge badge-' + ${m.estado.name()}"
+                              th:text="${m.estado.name()}">
+                            libre
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-accion btn-eliminar"
+                                th:onclick="'eliminar(\'mesas\',' + ${m.mesaId} + ')'">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB PRODUCTOS -->
+<div class="tab-content" id="tab-productos">
+
+    <div class="form-nuevo">
+        <h3>+ Nuevo producto</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="prodNombre" placeholder="Nombre del producto"/>
+            </div>
+            <div class="form-group">
+                <label>Precio base</label>
+                <input type="number" id="prodPrecio" placeholder="0.00"
+                       min="0" step="0.25"/>
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <input type="text" id="prodCategoria" placeholder="Ej: Platos fuertes"/>
+            </div>
+            <div class="form-group">
+                <label>Estación</label>
+                <select id="prodEstacion">
+                    <option value="cocina">Cocina</option>
+                    <option value="bar">Bar</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-agregar" onclick="crearProducto()">
+            Agregar producto
+        </button>
+    </div>
+
+    <div class="tabla-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Estación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${productos}">
+                    <td th:text="${p.id}">1</td>
+                    <td th:text="${p.nombre}">Hamburguesa</td>
+                    <td th:text="${p.categoria}">Platos fuertes</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(p.precioBase, 1, 2)}">
+                        $8.00
+                    </td>
+                    <td th:text="${p.estacion}">cocina</td>
+                    <td>
+                        <button class="btn-accion btn-eliminar"
+                                th:onclick="'eliminar(\'productos\',' + ${p.id} + ')'">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB ADICIONALES -->
+<div class="tab-content" id="tab-adicionales">
+
+    <div class="form-nuevo">
+        <h3>+ Nuevo adicional</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="addNombre" placeholder="Ej: Queso extra"/>
+            </div>
+            <div class="form-group">
+                <label>Precio extra</label>
+                <input type="number" id="addPrecio" placeholder="0.00"
+                       min="0" step="0.25"/>
+            </div>
+            <div class="form-group">
+                <label>Aplica a</label>
+                <input type="text" id="addAplica" placeholder="Ej: Platos fuertes"/>
+            </div>
+        </div>
+        <button class="btn-agregar" onclick="crearAdicional()">
+            Agregar adicional
+        </button>
+    </div>
+
+    <div class="tabla-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio extra</th>
+                    <th>Aplica a</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${adicionales}">
+                    <td th:text="${a.adicionalId}">1</td>
+                    <td th:text="${a.nombre}">Queso extra</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(a.precio, 1, 2)}">
+                        $0.75
+                    </td>
+                    <td th:text="${a.aplicaA}">Platos fuertes</td>
+                    <td>
+                        <button class="btn-accion btn-eliminar"
+                                th:onclick="'eliminar(\'adicionales\',' + ${a.adicionalId} + ')'">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="toast" id="toast">✅ Operación exitosa</div>
+
+<script>
+    // Cambiar tab activo
+    function cambiarTab(id, btn) {
+        document.querySelectorAll('.tab-content')
+                .forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn')
+                .forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function mostrarToast(msg, error = false) {
+        const t = document.getElementById('toast');
+        t.textContent    = (error ? '❌ ' : '✅ ') + msg;
+        t.style.background = error ? '#e74c3c' : '#27ae60';
+        t.style.display  = 'block';
+        setTimeout(() => { t.style.display = 'none'; location.reload(); }, 1500);
+    }
+
+    // ── Crear empleado ──
+    async function crearEmpleado() {
+        const body = {
+            nombre:   document.getElementById('empNombre').value,
+            usuario:  document.getElementById('empUsuario').value,
+            password: document.getElementById('empPassword').value,
+            rol:      document.getElementById('empRol').value
+        };
+        const res = await fetch('/api/empleados', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        res.ok ? mostrarToast('Empleado creado')
+               : mostrarToast('Error al crear empleado', true);
+    }
+
+    // ── Crear mesa ──
+    async function crearMesa() {
+        const body = {
+            numero: parseInt(document.getElementById('mesaNumero').value),
+            estado: 'libre'
+        };
+        const res = await fetch('/api/mesas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        res.ok ? mostrarToast('Mesa creada')
+               : mostrarToast('Error al crear mesa', true);
+    }
+
+    // ── Crear producto ──
+    async function crearProducto() {
+        const body = {
+            nombre:     document.getElementById('prodNombre').value,
+            precioBase: parseFloat(document.getElementById('prodPrecio').value),
+            categoria:  document.getElementById('prodCategoria').value,
+            estacion:   document.getElementById('prodEstacion').value
+        };
+        const res = await fetch('/api/productos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        res.ok ? mostrarToast('Producto creado')
+               : mostrarToast('Error al crear producto', true);
+    }
+
+    // ── Crear adicional ──
+    async function crearAdicional() {
+        const body = {
+            nombre:  document.getElementById('addNombre').value,
+            precio:  parseFloat(document.getElementById('addPrecio').value),
+            aplicaA: document.getElementById('addAplica').value
+        };
+        const res = await fetch('/api/adicionales', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        res.ok ? mostrarToast('Adicional creado')
+               : mostrarToast('Error al crear adicional', true);
+    }
+
+    // ── Eliminar cualquier entidad ──
+    async function eliminar(entidad, id) {
+        if (!confirm('¿Eliminar este elemento?')) return;
+        const res = await fetch(`/api/${entidad}/${id}`, { method: 'DELETE' });
+        res.ok ? mostrarToast('Eliminado correctamente')
+               : mostrarToast('No se puede eliminar', true);
+    }
+</script>
+
+</body>
+</html>

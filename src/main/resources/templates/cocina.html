@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla Cocina</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+
+        .navbar {
+            background: #16213e;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e67e22;
+        }
+
+        .navbar h1 { color: #e67e22; font-size: 20px; }
+
+        .reloj {
+            color: #e2b04a;
+            font-size: 18px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 24px;
+            height: calc(100vh - 54px);
+        }
+
+        .columna h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .col-pendiente h2 {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .col-preparacion h2 {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+            border: 1px solid #f39c12;
+        }
+
+        .comandas-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            height: calc(100% - 60px);
+        }
+
+        .comanda-card {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid transparent;
+        }
+
+        .comanda-card.pendiente   { border-left-color: #e74c3c; }
+        .comanda-card.preparacion { border-left-color: #f39c12; }
+
+        .comanda-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .comanda-mesa {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e2b04a;
+        }
+
+        .comanda-tiempo { font-size: 12px; color: #7f8c8d; }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid #0f3460;
+            font-size: 14px;
+        }
+
+        .item-row:last-child { border-bottom: none; }
+
+        .item-nombre { font-weight: 600; }
+
+        .item-cant {
+            background: #0f3460;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #e2b04a;
+            font-weight: 700;
+        }
+
+        .item-notas {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+
+        .vacio {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>👨‍🍳 Pantalla de Cocina</h1>
+    <div style="display:flex; align-items:center; gap:20px;">
+        <span class="reloj" id="reloj">00:00:00</span>
+        <span style="color:#bdc3c7; font-size:14px;"
+              th:text="${empleado.nombre}">Cocinero</span>
+        <a href="/logout" style="color:#e74c3c; text-decoration:none;
+           font-size:13px; border:1px solid #e74c3c; padding:5px 12px;
+           border-radius:6px;">Salir</a>
+    </div>
+</nav>
+
+<div class="layout">
+
+    <!-- Columna PENDIENTES -->
+    <div class="columna col-pendiente">
+        <h2>🔴 Pendientes
+            (<span th:text="${#lists.size(pendientes)}">0</span>)
+        </h2>
+        <div class="comandas-lista">
+            <div th:if="${#lists.isEmpty(pendientes)}" class="vacio">
+                No hay comandas pendientes
+            </div>
+            <div th:each="c : ${pendientes}"
+                 class="comanda-card pendiente">
+                <div class="comanda-header">
+                    <span class="comanda-mesa"
+                          th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
+                    <span class="comanda-tiempo"
+                          th:text="${#temporals.format(c.fecha, 'HH:mm')}">
+                        12:30
+                    </span>
+                </div>
+                <div th:each="d : ${c.detalles}" class="item-row">
+                    <div>
+                        <div class="item-nombre"
+                             th:text="${d.producto.nombre}">Hamburguesa</div>
+                        <div class="item-notas"
+                             th:if="${d.notas != null and !d.notas.isEmpty()}"
+                             th:text="${d.notas}">Queso extra</div>
+                    </div>
+                    <span class="item-cant"
+                          th:text="'x' + ${d.cantidad}">x1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna EN PREPARACIÓN -->
+    <div class="columna col-preparacion">
+        <h2>🟡 En preparación
+            (<span th:text="${#lists.size(enPreparacion)}">0</span>)
+        </h2>
+        <div class="comandas-lista">
+            <div th:if="${#lists.isEmpty(enPreparacion)}" class="vacio">
+                No hay comandas en preparación
+            </div>
+            <div th:each="c : ${enPreparacion}"
+                 class="comanda-card preparacion">
+                <div class="comanda-header">
+                    <span class="comanda-mesa"
+                          th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
+                    <span class="comanda-tiempo"
+                          th:text="${#temporals.format(c.fecha, 'HH:mm')}">
+                        12:30
+                    </span>
+                </div>
+                <div th:each="d : ${c.detalles}" class="item-row">
+                    <div>
+                        <div class="item-nombre"
+                             th:text="${d.producto.nombre}">Hamburguesa</div>
+                        <div class="item-notas"
+                             th:if="${d.notas != null and !d.notas.isEmpty()}"
+                             th:text="${d.notas}">Queso extra</div>
+                    </div>
+                    <span class="item-cant"
+                          th:text="'x' + ${d.cantidad}">x1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function actualizarReloj() {
+        document.getElementById('reloj').textContent =
+            new Date().toLocaleTimeString('es-EC');
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
+
+    // Auto-refresco cada 30 segundos
+    setTimeout(() => location.reload(), 30000);
+</script>
+
+</body>
+</html>

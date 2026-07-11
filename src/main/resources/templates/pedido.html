@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomar Pedido</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+
+        .navbar {
+            background: #16213e;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2b04a;
+        }
+
+        .navbar h1 { color: #e2b04a; font-size: 18px; }
+
+        .btn-back {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .btn-back:hover { color: #e2b04a; }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            height: calc(100vh - 54px);
+        }
+
+        .menu-panel {
+            padding: 24px;
+            overflow-y: auto;
+            border-right: 1px solid #0f3460;
+        }
+
+        .categorias {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #0f3460;
+            background: transparent;
+            color: #bdc3c7;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: #e2b04a;
+            color: #1a1a2e;
+            border-color: #e2b04a;
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .producto-card {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 20px 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .producto-card:hover {
+            border-color: #e2b04a;
+            transform: translateY(-2px);
+        }
+
+        .producto-nombre { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .producto-cat    { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; }
+        .producto-precio { font-size: 18px; font-weight: 700; color: #e2b04a; }
+
+        .cart-panel {
+            background: #16213e;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .cart-titulo {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #0f3460;
+            color: #e2b04a;
+        }
+
+        .cart-items { flex: 1; overflow-y: auto; }
+
+        .cart-item {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-nombre { font-size: 14px; font-weight: 600; }
+        .cart-item-precio { color: #e2b04a; font-weight: 700; font-size: 14px; }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .qty-btn {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 1px solid #1a4a7a;
+            background: #1a4a7a;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .qty-btn:hover { background: #e2b04a; border-color: #e2b04a; color: #1a1a2e; }
+
+        .adicionales-lista {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .adicional-tag {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid #1a4a7a;
+            background: transparent;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .adicional-tag.selected {
+            background: #e2b04a;
+            color: #1a1a2e;
+            border-color: #e2b04a;
+            font-weight: 600;
+        }
+
+        .cart-footer {
+            padding-top: 16px;
+            border-top: 1px solid #0f3460;
+            margin-top: 8px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cart-total span:last-child { color: #e2b04a; }
+
+        .btn-enviar {
+            width: 100%;
+            padding: 14px;
+            background: #27ae60;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-enviar:hover { background: #2ecc71; }
+        .btn-enviar:disabled { background: #2d4a3a; color: #555; cursor: not-allowed; }
+
+        .empty-cart {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px 0;
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #27ae60;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="/mesas" class="btn-back">← Volver</a>
+        <h1>Tomar Pedido</h1>
+    </div>
+    <span style="color:#bdc3c7; font-size:14px;"
+          th:text="'Mesa ' + ${mesa.numero} + ' · ' + ${empleado.nombre}">
+    </span>
+</nav>
+
+<div class="layout">
+
+    <!-- Menú izquierdo -->
+    <div class="menu-panel">
+        <div class="categorias">
+            <button class="cat-btn active" onclick="filtrar('todos', this)">Todos</button>
+            <button class="cat-btn" onclick="filtrar('cocina', this)">Cocina</button>
+            <button class="cat-btn" onclick="filtrar('bar', this)">Bar</button>
+        </div>
+
+        <div class="productos-grid">
+            <!-- ✅ Sin th:onclick — datos en atributos data-* -->
+            <div th:each="p : ${productos}"
+                 th:attr="data-cat=${p.estacion},
+                          data-id=${p.id},
+                          data-nombre=${p.nombre},
+                          data-precio=${p.precioBase}"
+                 class="producto-card"
+                 onclick="abrirProducto(this)">
+
+                <div class="producto-nombre" th:text="${p.nombre}">Hamburguesa</div>
+                <div class="producto-cat"    th:text="${p.categoria}">Platos fuertes</div>
+                <div class="producto-precio"
+                     th:text="'$' + ${#numbers.formatDecimal(p.precioBase, 1, 2)}">
+                    $8.00
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrito derecho -->
+    <div class="cart-panel">
+        <div class="cart-titulo">
+            🛒 Pedido — Mesa <span th:text="${mesa.numero}">1</span>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">Agrega productos al pedido</div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total estimado</span>
+                <span id="totalDisplay">$0.00</span>
+            </div>
+            <button class="btn-enviar"
+                    id="btnEnviar"
+                    disabled
+                    onclick="enviarPedido()">
+                Enviar a cocina / bar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">✅ Pedido enviado correctamente</div>
+
+<!-- Script 1: datos de Thymeleaf -->
+<script th:inline="javascript">
+    const mesaId             = [[${mesa.mesaId}]];
+    const empleadoId         = [[${empleado.id}]];
+    const adicionalesDisponibles = [[${adicionales}]];
+</script>
+
+<!-- Script 2: lógica de la página -->
+<script>
+    let carrito = [];
+
+    function abrirProducto(el) {
+        const id     = parseInt(el.dataset.id);
+        const nombre = el.dataset.nombre;
+        const precio = parseFloat(el.dataset.precio);
+
+        const existente = carrito.find(i => i.id === id);
+        if (existente) {
+            existente.cantidad++;
+            renderCarrito();
+            return;
+        }
+
+        carrito.push({ id, nombre, precio, cantidad: 1, adicionales: [] });
+        renderCarrito();
+    }
+
+    function toggleAdicional(productoId, adicionalId, precio) {
+        const item = carrito.find(i => i.id === productoId);
+        if (!item) return;
+
+        const idx = item.adicionales.findIndex(a => a.id === adicionalId);
+        if (idx >= 0) {
+            item.adicionales.splice(idx, 1);
+        } else {
+            item.adicionales.push({ id: adicionalId, precio });
+        }
+        renderCarrito();
+    }
+
+    function cambiarCantidad(id, delta) {
+        const item = carrito.find(i => i.id === id);
+        if (!item) return;
+        item.cantidad += delta;
+        if (item.cantidad <= 0) carrito = carrito.filter(i => i.id !== id);
+        renderCarrito();
+    }
+
+    function renderCarrito() {
+        const container = document.getElementById('cartItems');
+        const btnEnviar = document.getElementById('btnEnviar');
+
+        if (carrito.length === 0) {
+            container.innerHTML =
+                '<div class="empty-cart">Agrega productos al pedido</div>';
+            document.getElementById('totalDisplay').textContent = '$0.00';
+            btnEnviar.disabled = true;
+            return;
+        }
+
+        btnEnviar.disabled = false;
+        let totalGeneral = 0;
+        let html = '';
+
+        carrito.forEach(item => {
+            const extraTotal = item.adicionales
+                .reduce((s, a) => s + a.precio, 0);
+            const precioUnit = item.precio + extraTotal;
+            const subtotal   = precioUnit * item.cantidad;
+            totalGeneral    += subtotal;
+
+            const tagsHtml = adicionalesDisponibles.map(a => {
+                const sel = item.adicionales.find(x => x.id === a.adicionalId);
+                const cls = sel ? 'adicional-tag selected' : 'adicional-tag';
+                return `<button class="${cls}"
+                    onclick="toggleAdicional(${item.id},
+                             ${a.adicionalId},
+                             ${a.precio})">
+                    +${a.nombre} $${parseFloat(a.precio).toFixed(2)}
+                </button>`;
+            }).join('');
+
+            html += `
+            <div class="cart-item">
+                <div class="cart-item-header">
+                    <span class="cart-item-nombre">${item.nombre}</span>
+                    <span class="cart-item-precio">
+                        $${subtotal.toFixed(2)}
+                    </span>
+                </div>
+                <div class="cart-item-qty">
+                    <button class="qty-btn"
+                        onclick="cambiarCantidad(${item.id}, -1)">−</button>
+                    <span>${item.cantidad}</span>
+                    <button class="qty-btn"
+                        onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                </div>
+                <div class="adicionales-lista">${tagsHtml}</div>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('totalDisplay').textContent =
+            '$' + totalGeneral.toFixed(2);
+    }
+
+    async function enviarPedido() {
+        const btn = document.getElementById('btnEnviar');
+        btn.disabled    = true;
+        btn.textContent = 'Enviando...';
+
+        try {
+            const resComanda = await fetch('/api/comandas', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ mesaId, empleadoId })
+            });
+            const comanda = await resComanda.json();
+
+            for (const item of carrito) {
+                await fetch('/api/detalles', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({
+                        comandaId:    comanda.id,
+                        productoId:   item.id,
+                        cantidad:     item.cantidad,
+                        adicionalIds: item.adicionales.map(a => a.id)
+                    })
+                });
+            }
+
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => { window.location.href = '/mesas'; }, 1500);
+
+        } catch (err) {
+            btn.disabled    = false;
+            btn.textContent = 'Enviar a cocina / bar';
+            alert('Error al enviar el pedido. Intenta de nuevo.');
+        }
+    }
+
+    function filtrar(cat, btn) {
+        document.querySelectorAll('.cat-btn')
+                .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.producto-card').forEach(card => {
+            card.style.display =
+                (cat === 'todos' || card.dataset.cat === cat)
+                ? 'block' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>

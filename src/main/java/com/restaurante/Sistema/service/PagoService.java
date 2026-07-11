@@ -1,33 +1,41 @@
-// service/PagoService.java
 package com.restaurante.Sistema.service;
 
+import com.restaurante.Sistema.Enum.MetodoPago;
 import com.restaurante.Sistema.model.Comprobante;
 import com.restaurante.Sistema.model.Pago;
-import com.restaurante.Sistema.Enum.MetodoPago;
 import com.restaurante.Sistema.repository.ComprobanteRepository;
 import com.restaurante.Sistema.repository.PagoRepository;
 import com.restaurante.Sistema.patrones.strategy.ContextoPago;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class PagoService {
 
-    private final PagoRepository pagoRepo;
+    private final PagoRepository        pagoRepo;
     private final ComprobanteRepository comprobanteRepo;
-    private final ContextoPago contextoPago;
+    private final ContextoPago          contextoPago;
 
     public PagoService(PagoRepository pagoRepo,
                        ComprobanteRepository comprobanteRepo,
                        ContextoPago contextoPago) {
-        this.pagoRepo = pagoRepo;
+        this.pagoRepo        = pagoRepo;
         this.comprobanteRepo = comprobanteRepo;
-        this.contextoPago = contextoPago;
+        this.contextoPago    = contextoPago;
+    }
+
+    public List<Pago> listarTodos() {
+        return pagoRepo.findAll();
+    }
+
+    public Pago buscarPorId(Long id) {
+        return pagoRepo.findById(id).orElse(null);
     }
 
     public Pago procesarPago(Long comprobanteId,
-                             MetodoPago metodo,
-                             BigDecimal propina) {
+                              MetodoPago metodo,
+                              BigDecimal propina) {
 
         Comprobante comprobante = comprobanteRepo
             .findById(comprobanteId).orElse(null);
@@ -47,7 +55,6 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
-        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
     }
 
@@ -73,7 +80,7 @@ public class PagoService {
             .setScale(2, java.math.RoundingMode.HALF_UP);
 
         comprobante.setPropina(propina);
-        comprobante.setDescuento(descuento);  // guardas el motivo en BD
+        comprobante.setDescuento(descuento);
         comprobante.setTotal(total);
         comprobanteRepo.save(comprobante);
 
@@ -81,7 +88,10 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
-        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
+    }
+
+    public void eliminar(Long id) {
+        pagoRepo.deleteById(id);
     }
 }

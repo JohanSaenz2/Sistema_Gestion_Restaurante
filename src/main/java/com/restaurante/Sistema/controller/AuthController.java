@@ -46,7 +46,9 @@ public class AuthController {
         // Redirigir según el rol
         return switch (empleado.getRol()) {
             case mesero        -> "redirect:/mesas";
-            case cocinero, bartender -> "redirect:/cocina";
+            case cocinero -> "redirect:/cocina";
+            case bartender -> "redirect:/bar";
+            case cajero -> "redirect:/caja";
             case administrador -> "redirect:/admin";
             default            -> "redirect:/login";
         };
