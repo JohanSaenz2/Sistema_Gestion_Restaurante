@@ -270,24 +270,34 @@
 
 <!-- Tabs -->
 <div class="tabs">
-    <button class="tab-btn active" onclick="cambiarTab('resumen', this)">
-        📊 Resumen
-    </button>
-    <button class="tab-btn" onclick="cambiarTab('comandas', this)">
+	<button class="tab-btn active" onclick="cambiarTab('resumen', this)">
+	       📊 Resumen
+	   </button>
+  <a href="/cocina" >
+ 	<button class="tab-btn" onclick="cambiarTab('comandas', this)">
         📋 Comandas
     </button>
+	</a>
+    <a href="/agregarEmpleado">
     <button class="tab-btn" onclick="cambiarTab('empleados', this)">
         👤 Empleados
     </button>
+    </a>
+    <a href="/agregarMesas">
     <button class="tab-btn" onclick="cambiarTab('mesas', this)">
         🪑 Mesas
     </button>
+    </a>
+	<a href="/agregarProducto">
     <button class="tab-btn" onclick="cambiarTab('productos', this)">
         🍽 Productos
     </button>
+	</a>
+    <a href="/AgregarAdicionales">
     <button class="tab-btn" onclick="cambiarTab('adicionales', this)">
         ➕ Adicionales
     </button>
+    </a>
 </div>
 
 <!-- TAB RESUMEN -->

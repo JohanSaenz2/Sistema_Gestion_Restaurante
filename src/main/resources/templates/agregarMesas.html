@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Mesa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+        .navbar {
+            background: #16213e;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #27ae60;
+        }
+        .navbar h1 { color: #27ae60; font-size: 18px; }
+        .btn-back { color: #7f8c8d; text-decoration: none; font-size: 13px; }
+        .btn-back:hover { color: #27ae60; }
+        .container {
+            max-width: 480px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+        .card {
+            background: #16213e;
+            border-radius: 14px;
+            padding: 40px 32px;
+            border-top: 3px solid #27ae60;
+            text-align: center;
+        }
+        .card h2 { font-size: 18px; color: #27ae60; margin-bottom: 32px; }
+        .numero-input {
+            font-size: 48px;
+            font-weight: 700;
+            color: #e2b04a;
+            width: 140px;
+            text-align: center;
+            background: #0f3460;
+            border: 2px solid #1a4a7a;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 0 auto 32px;
+            display: block;
+        }
+        .numero-input:focus {
+            outline: none;
+            border-color: #27ae60;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #bdc3c7;
+            margin-bottom: 12px;
+        }
+        .btn-guardar {
+            width: 100%;
+            padding: 13px;
+            background: #27ae60;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-guardar:hover    { background: #2ecc71; }
+        .btn-guardar:disabled { background: #1a4a3a; cursor: not-allowed; }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            color: white;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="/admin" class="btn-back">← Volver</a>
+        <h1>Nueva Mesa</h1>
+    </div>
+    <span style="color:#bdc3c7; font-size:14px;"
+          th:text="${empleado.nombre}">Admin</span>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>🪑 Agregar mesa</h2>
+
+        <label>Número de mesa</label>
+        <input type="number" id="numero"
+               class="numero-input"
+               placeholder="1" min="1"/>
+
+        <button class="btn-guardar" id="btnGuardar"
+                onclick="guardar()">
+            Agregar mesa
+        </button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    async function guardar() {
+        const numero = parseInt(document.getElementById('numero').value);
+
+        if (!numero || numero <= 0) {
+            mostrarToast('❌ Ingresa un número válido', '#e74c3c');
+            return;
+        }
+
+        const btn = document.getElementById('btnGuardar');
+        btn.disabled    = true;
+        btn.textContent = 'Agregando...';
+
+        try {
+            const res = await fetch('/api/mesas', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ numero, estado: 'libre' })
+            });
+
+            if (res.ok) {
+                mostrarToast('✅ Mesa agregada', '#27ae60');
+                setTimeout(() => window.location.href = '/admin', 1500);
+            } else {
+                const err = await res.json();
+                throw new Error(err.error || 'Error');
+            }
+        } catch (err) {
+            btn.disabled    = false;
+            btn.textContent = 'Agregar mesa';
+            mostrarToast('❌ ' + (err.message || 'Error al guardar'), '#e74c3c');
+        }
+    }
+
+    function mostrarToast(msg, color) {
+        const t = document.getElementById('toast');
+        t.textContent      = msg;
+        t.style.background = color;
+        t.style.display    = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+
+    // Enter para guardar
+    document.getElementById('numero')
+            .addEventListener('keypress', e => {
+        if (e.key === 'Enter') guardar();
+    });
+</script>
+</body>
+</html>

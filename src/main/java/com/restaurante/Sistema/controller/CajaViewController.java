@@ -30,7 +30,7 @@ public class CajaViewController {
 
         // Comandas listas para entregar
         model.addAttribute("listas",
-            comandaService.porEstado(EstadoComanda.lista));
+            comandaService.porEstado(EstadoComanda.pendiente));
 
         // Comandas ya entregadas pendientes de cobro
         model.addAttribute("entregadas",

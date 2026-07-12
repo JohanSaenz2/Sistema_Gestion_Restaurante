@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Producto</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: #16213e;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #3498db;
+        }
+        .navbar h1 { color: #3498db; font-size: 18px; }
+        .btn-back {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .btn-back:hover { color: #3498db; }
+        .container {
+            max-width: 560px;
+            margin: 40px auto;
+            width: 100%;
+            padding: 0 24px;
+        }
+        .card {
+            background: #16213e;
+            border-radius: 14px;
+            padding: 32px;
+            border-top: 3px solid #3498db;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #3498db;
+            margin-bottom: 24px;
+        }
+        .form-group { margin-bottom: 18px; }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #bdc3c7;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px 14px;
+            background: #0f3460;
+            border: 1px solid #1a4a7a;
+            border-radius: 8px;
+            color: #ecf0f1;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .btn-guardar {
+            width: 100%;
+            padding: 13px;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn-guardar:hover { background: #2980b9; }
+        .btn-guardar:disabled { background: #1a4a7a; cursor: not-allowed; }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            color: white;
+            z-index: 999;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="/admin" class="btn-back">← Volver</a>
+        <h1>Nuevo Producto</h1>
+    </div>
+    <span style="color:#bdc3c7; font-size:14px;"
+          th:text="${empleado.nombre}">Admin</span>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>🍽 Agregar producto al menú</h2>
+
+        <div class="form-group">
+            <label>Nombre del producto *</label>
+            <input type="text" id="nombre"
+                   placeholder="Ej: Lomo saltado"/>
+            <span class="error-msg" id="errNombre">
+                El nombre es obligatorio
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>Precio base ($) *</label>
+            <input type="number" id="precio"
+                   placeholder="0.00" min="0" step="0.25"/>
+            <span class="error-msg" id="errPrecio">
+                El precio debe ser mayor a 0
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>Categoría *</label>
+                   <select  id="categoria">
+                    <option value="Platos fuertes">Platos fuertes</option>
+                    <option value="Entradas">Entradas</option>
+                    <option value="Postres">Postres</option>
+                    <option value="Bebidas">Bebidas</option>
+                   </select>
+        </div>
+
+        <div class="form-group">
+            <label>Estación *</label>
+            <select id="estacion">
+                <option value="cocina">🍳 Cocina</option>
+                <option value="bar">🍹 Bar</option>
+            </select>
+        </div>
+
+        <button class="btn-guardar" id="btnGuardar"
+                onclick="guardar()">
+            Guardar producto
+        </button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    async function guardar() {
+        // Validación
+        let valido = true;
+
+        const nombre = document.getElementById('nombre').value.trim();
+        const precio = parseFloat(document.getElementById('precio').value);
+
+        document.getElementById('errNombre').style.display =
+            !nombre ? 'block' : 'none';
+        document.getElementById('errPrecio').style.display =
+            (!precio || precio <= 0) ? 'block' : 'none';
+
+        if (!nombre || !precio || precio <= 0) return;
+
+        const btn = document.getElementById('btnGuardar');
+        btn.disabled    = true;
+        btn.textContent = 'Guardando...';
+
+        try {
+            const res = await fetch('/api/productos', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nombre,
+                    precioBase: precio,
+                    categoria:  document.getElementById('categoria').value.trim(),
+                    estacion:   document.getElementById('estacion').value
+                })
+            });
+
+            if (res.ok) {
+                mostrarToast('✅ Producto guardado', '#27ae60');
+                setTimeout(() => window.location.href = '/admin', 1500);
+            } else {
+                throw new Error('Error del servidor');
+            }
+        } catch (err) {
+            btn.disabled    = false;
+            btn.textContent = 'Guardar producto';
+            mostrarToast('❌ Error al guardar', '#e74c3c');
+        }
+    }
+
+    function mostrarToast(msg, color) {
+        const t = document.getElementById('toast');
+        t.textContent      = msg;
+        t.style.background = color;
+        t.style.display    = 'block';
+    }
+</script>
+</body>
+</html>
