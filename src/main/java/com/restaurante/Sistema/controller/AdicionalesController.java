@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Adicionales;
 import com.restaurante.Sistema.repository.AdicionalesRepository;
 
@@ -22,13 +24,17 @@ public class AdicionalesController {
 	}
 
 	@GetMapping
-	public List<Adicionales> listarTodos() {
+	public List<Adicionales> listarTodos(@RequestParam(required = false) String estacion) {
+		if (estacion != null && !estacion.isBlank()) {
+			return repo.findByAplicaA(estacion);
+		}
 		return repo.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public Adicionales buscarPorID(@PathVariable Long id) {
-		return repo.findById(id).orElse(null);
+		return repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Adicional " + id + " no encontrado"));
 	}
 	
 	@PostMapping

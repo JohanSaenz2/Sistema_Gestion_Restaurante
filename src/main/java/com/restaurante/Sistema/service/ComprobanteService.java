@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.restaurante.Sistema.Enum.TipoComprobante;
 import com.restaurante.Sistema.config.ImpuestoConfig;
 import com.restaurante.Sistema.dto.ComprobanteResponse;
-import com.restaurante.Sistema.exception.ComandaInvalidaException;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Cliente;
 import com.restaurante.Sistema.model.Comanda;
 import com.restaurante.Sistema.model.Comprobante;
@@ -53,10 +53,11 @@ public class ComprobanteService {
 	@Transactional
 	public ComprobanteResponse generar(Long comandaId, TipoComprobante tipo, Long clienteId) {
 		Comanda comanda = comandaRepo.findById(comandaId)
-				.orElseThrow(() -> new ComandaInvalidaException("No existe la comanda " + comandaId));
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + comandaId + " no encontrada"));
 
 		Cliente cliente = clienteId == null ? null
-				: clienteRepo.findById(clienteId).orElse(null);
+				: clienteRepo.findById(clienteId)
+						.orElseThrow(() -> new RecursoNoEncontradoException("Cliente " + clienteId + " no encontrado"));
 
 		ComprobanteFactory f = factory.crear(tipo.name());
 		f.setTasaIva(impuestoConfig.getIva());

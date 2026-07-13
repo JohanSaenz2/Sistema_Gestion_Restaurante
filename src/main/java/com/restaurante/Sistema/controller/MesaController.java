@@ -1,5 +1,6 @@
 package com.restaurante.Sistema.controller;
 import com.restaurante.Sistema.dto.MesaResponse;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Mesa;
 import com.restaurante.Sistema.repository.MesaRepository;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,8 @@ public class MesaController {
 
     @GetMapping("/{id}")
     public MesaResponse buscarPorId(@PathVariable Long id) {
-        return repo.findById(id).map(this::toResponse).orElse(null);
+        return repo.findById(id).map(this::toResponse)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Mesa " + id + " no encontrada"));
     }
 
     @PostMapping
@@ -29,8 +31,8 @@ public class MesaController {
 
     @PutMapping("/{id}")
     public MesaResponse actualizar(@PathVariable Long id, @RequestBody Mesa datos) {
-        Mesa mesa = repo.findById(id).orElse(null);
-        if (mesa == null) return null;
+        Mesa mesa = repo.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Mesa " + id + " no encontrada"));
         mesa.setNumero(datos.getNumero());
         mesa.setEstado(datos.getEstado());
         return toResponse(repo.save(mesa));

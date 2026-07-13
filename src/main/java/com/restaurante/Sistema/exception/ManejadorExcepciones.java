@@ -16,10 +16,16 @@ public class ManejadorExcepciones {
 	    ClienteRequeridoException.class,
 	    ComandaInvalidaException.class,
 	    IllegalArgumentException.class,
-	    TransicionInvalidaException.class  
+	    TransicionInvalidaException.class
 	})
 	public ResponseEntity<Map<String, String>> manejarReglasDeNegocio(RuntimeException ex) {
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	        .body(Map.of("error", ex.getMessage()));
+	}
+
+	@ExceptionHandler(RecursoNoEncontradoException.class)
+	public ResponseEntity<Map<String, String>> manejarNoEncontrado(RecursoNoEncontradoException ex) {
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	        .body(Map.of("error", ex.getMessage()));
 	}
 }

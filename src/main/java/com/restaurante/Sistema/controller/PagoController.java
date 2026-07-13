@@ -2,6 +2,7 @@ package com.restaurante.Sistema.controller;
 
 import com.restaurante.Sistema.dto.PagoDescuentoRequest;
 import com.restaurante.Sistema.dto.PagoRequest;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Pago;
 import com.restaurante.Sistema.repository.PagoRepository;
 import com.restaurante.Sistema.service.PagoService;
@@ -26,7 +27,8 @@ public class PagoController {
 
  @GetMapping("/{id}")
  public Pago buscarPorId(@PathVariable Long id) {
-     return repo.findById(id).orElse(null);
+     return repo.findById(id)
+         .orElseThrow(() -> new RecursoNoEncontradoException("Pago " + id + " no encontrado"));
  }
  @PostMapping("/procesar")
  public Pago procesar(@RequestBody PagoRequest req) {
