@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.restaurante.Sistema.Enum.Estacion;
 import com.restaurante.Sistema.Enum.EstadoItem;
 import com.restaurante.Sistema.dto.DetalleComandaResponse;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Adicionales;
 import com.restaurante.Sistema.model.Comanda;
 import com.restaurante.Sistema.model.DetalleComanda;
@@ -44,9 +46,12 @@ public class DetalleComandaService {
 
 	public DetalleComandaResponse crearDetalle(Long productoId, Long comandaId, int cantidad, List<Long> adicionalIds) {
 
-		Product producto = productoRepo.findById(productoId).orElse(null);
-		if (producto == null)
-			return null;
+		if (cantidad <= 0) {
+			throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
+		}
+
+		Product producto = productoRepo.findById(productoId)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Producto " + productoId + " no encontrado"));
 
 		ItemPedido item = new ProductBase(producto);
 
@@ -60,9 +65,8 @@ public class DetalleComandaService {
 				}
 			}
 		}
-		Comanda comanda = comandaRepo.findById(comandaId).orElse(null);
-		if (comanda == null)
-			return null;
+		Comanda comanda = comandaRepo.findById(comandaId)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + comandaId + " no encontrada"));
 		BigDecimal precioFinal = item.getPrice();
 		BigDecimal subtotal = precioFinal.multiply(BigDecimal.valueOf(cantidad));
 
@@ -85,16 +89,33 @@ public class DetalleComandaService {
 		    comanda.setTotal(nuevoTotal);
 		    comandaRepo.save(comanda);
 		}
+
+		publicador.notificar(new EventoCambioEstado(
+				guardado.getId(),
+				comanda.getId(),
+				producto.getNombre(),
+				cantidad,
+				EstadoItem.pendiente,
+				producto.getEstacion()));
+
+		return toResponse(guardado);
+	}
+
+	public List<DetalleComandaResponse> listarPorEstacionYEstado(Estacion estacion, EstadoItem estado) {
+		return detalleRepo.findByProductoEstacionAndEstado(estacion, estado)
+				.stream().map(this::toResponse).toList();
+	}
+
+	private DetalleComandaResponse toResponse(DetalleComanda d) {
 		return new DetalleComandaResponse(
-		    guardado.getId(),
-		    guardado.getComanda().getId(),
-		    guardado.getProducto().getId(),
-		    guardado.getProducto().getNombre(),
-		    guardado.getCantidad(),
-		    guardado.getSubtotal(),
-		    guardado.getNotas(),
-		    guardado.getEstado()
-		);
+				d.getId(),
+				d.getComanda().getId(),
+				d.getProducto().getId(),
+				d.getProducto().getNombre(),
+				d.getCantidad(),
+				d.getSubtotal(),
+				d.getNotas(),
+				d.getEstado());
 	}
 
 	
@@ -115,8 +136,8 @@ public class DetalleComandaService {
 	}
 	
 	private DetalleComandaResponse cambiarEstado(Long detalleId, String accion) {
-	    DetalleComanda detalle = detalleRepo.findById(detalleId).orElse(null);
-	    if (detalle == null) return null;
+	    DetalleComanda detalle = detalleRepo.findById(detalleId)
+	        .orElseThrow(() -> new RecursoNoEncontradoException("Detalle " + detalleId + " no encontrado"));
 
 	    ContextoItem contexto = new ContextoItem(detalle.getEstado());
 
@@ -134,18 +155,12 @@ public class DetalleComandaService {
 	    publicador.notificar(new EventoCambioEstado(
 	        detalle.getId(),
 	        detalle.getComanda().getId(),
+	        detalle.getProducto().getNombre(),
+	        detalle.getCantidad(),
 	        detalle.getEstado(),
 	        detalle.getProducto().getEstacion()
 	    ));
 
-	    return new DetalleComandaResponse(
-	        detalle.getId(),
-	        detalle.getComanda().getId(),
-	        detalle.getProducto().getId(),
-	        detalle.getProducto().getNombre(),
-	        detalle.getCantidad(),
-	        detalle.getSubtotal(),
-	        detalle.getNotas(),
-	        detalle.getEstado()
-	    );
-	}}
+	    return toResponse(detalle);
+	}
+}

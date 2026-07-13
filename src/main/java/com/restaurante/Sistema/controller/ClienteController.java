@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Cliente;
 import com.restaurante.Sistema.repository.ClienteRepository;
 
@@ -31,7 +32,8 @@ public class ClienteController {
 
 	@GetMapping("/{id}")
 	public Cliente buscarById(@PathVariable Long id) {
-		return repo.findById(id).orElse(null);
+		return repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Cliente " + id + " no encontrado"));
 	}
 
 	@PostMapping
@@ -41,9 +43,8 @@ public class ClienteController {
 
 	@PutMapping("/{id}")
 	public Cliente actualizar(@PathVariable Long id, @RequestBody Cliente datos) {
-		Cliente c = repo.findById(id).orElse(null);
-		if (c == null)
-			return null;
+		Cliente c = repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Cliente " + id + " no encontrado"));
 		c.setNombre(datos.getNombre());
 		c.setTelefono(datos.getTelefono());
 		c.setEmail(datos.getEmail());

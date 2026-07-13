@@ -3,6 +3,7 @@ package com.restaurante.Sistema.service;
 import com.restaurante.Sistema.Enum.MetodoPago;
 import com.restaurante.Sistema.model.Comprobante;
 import com.restaurante.Sistema.model.Pago;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.repository.ComprobanteRepository;
 import com.restaurante.Sistema.repository.PagoRepository;
 import com.restaurante.Sistema.patrones.strategy.ContextoPago;
@@ -30,16 +31,18 @@ public class PagoService {
     }
 
     public Pago buscarPorId(Long id) {
-        return pagoRepo.findById(id).orElse(null);
+        return pagoRepo.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Pago " + id + " no encontrado"));
     }
 
     public Pago procesarPago(Long comprobanteId,
                               MetodoPago metodo,
                               BigDecimal propina) {
 
-        Comprobante comprobante = comprobanteRepo
-            .findById(comprobanteId).orElse(null);
-        if (comprobante == null) return null;
+        validarPropina(propina);
+
+        Comprobante comprobante = comprobanteRepo.findById(comprobanteId)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Comprobante " + comprobanteId + " no encontrado"));
 
         BigDecimal total = contextoPago.calcular(
             metodo.name().toLowerCase(),
@@ -55,6 +58,7 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
+        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
     }
 
@@ -64,9 +68,13 @@ public class PagoService {
                                           BigDecimal porcentaje,
                                           String motivo) {
 
-        Comprobante comprobante = comprobanteRepo
-            .findById(comprobanteId).orElse(null);
-        if (comprobante == null) return null;
+        validarPropina(propina);
+        if (porcentaje == null || porcentaje.signum() < 0 || porcentaje.compareTo(BigDecimal.ONE) > 0) {
+            throw new IllegalArgumentException("El porcentaje de descuento debe estar entre 0 y 1");
+        }
+
+        Comprobante comprobante = comprobanteRepo.findById(comprobanteId)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Comprobante " + comprobanteId + " no encontrado"));
 
         BigDecimal total = contextoPago.calcularConDescuento(
             comprobante.getSubtotal(),
@@ -88,10 +96,17 @@ public class PagoService {
         pago.setComprobante(comprobante);
         pago.setMetodo(metodo);
         pago.setMonto(total);
+        pago.setComision(BigDecimal.ZERO);
         return pagoRepo.save(pago);
     }
 
     public void eliminar(Long id) {
         pagoRepo.deleteById(id);
+    }
+
+    private void validarPropina(BigDecimal propina) {
+        if (propina == null || propina.signum() < 0) {
+            throw new IllegalArgumentException("La propina no puede ser negativa");
+        }
     }
 }

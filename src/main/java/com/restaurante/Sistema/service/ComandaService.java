@@ -11,6 +11,7 @@ import com.restaurante.Sistema.Enum.EstadoComanda;
 import com.restaurante.Sistema.Enum.EstadoMesa;
 import com.restaurante.Sistema.dto.ComandaRequest;
 import com.restaurante.Sistema.dto.ComandaResponse;
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Comanda;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.model.Mesa;
@@ -36,7 +37,8 @@ public class ComandaService {
 	}
 
 	public Comanda buscarPorId(Long id) {
-		return repo.findById(id).orElse(null);
+		return repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + id + " no encontrada"));
 	}
 
 	public List<Comanda> porEstado(EstadoComanda estado) {
@@ -45,11 +47,10 @@ public class ComandaService {
 
 	public ComandaResponse crear(ComandaRequest comanda2) {
 
-		Mesa mesa = mesaRepo.findById(comanda2.mesaId()).orElse(null);
-		Empleado empleado = emplRepo.findById(comanda2.empleadoId()).orElse(null);
-
-		if (mesa == null || empleado == null)
-			return null;
+		Mesa mesa = mesaRepo.findById(comanda2.mesaId())
+				.orElseThrow(() -> new RecursoNoEncontradoException("Mesa " + comanda2.mesaId() + " no encontrada"));
+		Empleado empleado = emplRepo.findById(comanda2.empleadoId())
+				.orElseThrow(() -> new RecursoNoEncontradoException("Empleado " + comanda2.empleadoId() + " no encontrado"));
 
 		Comanda comanda = new Comanda();
 		comanda.setMesa(mesa);
@@ -72,9 +73,8 @@ public class ComandaService {
 	}
 
 	public Comanda avanzarEstado(Long id) {
-		Comanda comanda = repo.findById(id).orElse(null);
-		if (comanda == null)
-			return null;
+		Comanda comanda = repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + id + " no encontrada"));
 
 		switch (comanda.getEstado()) {
 		case pendiente -> comanda.setEstado(EstadoComanda.entregada);
@@ -90,9 +90,8 @@ public class ComandaService {
 	}
 
 	public Comanda cancelar(Long id) {
-		Comanda comanda = repo.findById(id).orElse(null);
-		if (comanda == null)
-			return null;
+		Comanda comanda = repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + id + " no encontrada"));
 
 		if (comanda.getEstado() == EstadoComanda.entregada) {
 			throw new IllegalArgumentException("No se puede cancelar una comanda ya entregada");
@@ -115,10 +114,8 @@ public class ComandaService {
 	}
 
 	public Comanda actualizar(Long id, Comanda datos) {
-		Comanda c = repo.findById(id).orElse(null);
-		if (c == null) {
-			return null;
-		}
+		Comanda c = repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + id + " no encontrada"));
 		c.setEstado(datos.getEstado());
 		c.setTotal(datos.getTotal());
 		return repo.save(c);

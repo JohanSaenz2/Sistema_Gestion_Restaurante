@@ -1,11 +1,13 @@
 // controller/DetalleComandaController.java
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.Enum.Estacion;
+import com.restaurante.Sistema.Enum.EstadoItem;
 import com.restaurante.Sistema.dto.DetalleComandaRequest;
 import com.restaurante.Sistema.dto.DetalleComandaResponse;
-import com.restaurante.Sistema.model.DetalleComanda;
 import com.restaurante.Sistema.service.DetalleComandaService;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/detalles")
@@ -15,6 +17,11 @@ public class DetalleComandaController {
 
     public DetalleComandaController(DetalleComandaService service) {
         this.service = service;
+    }
+
+    @GetMapping
+    public List<DetalleComandaResponse> listar(@RequestParam Estacion estacion, @RequestParam EstadoItem estado) {
+        return service.listarPorEstacionYEstado(estacion, estado);
     }
 
     @PostMapping

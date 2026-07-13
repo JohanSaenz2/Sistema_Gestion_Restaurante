@@ -1,5 +1,6 @@
 package com.restaurante.Sistema.controller;
 
+import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Product;
 import com.restaurante.Sistema.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,8 @@ public class ProductController {
   
     @GetMapping("/{id}")
     public Product buscarPorId(@PathVariable Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Producto " + id + " no encontrado"));
     }
     
     @PostMapping

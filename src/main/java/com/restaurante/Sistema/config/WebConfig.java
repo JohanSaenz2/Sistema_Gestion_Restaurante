@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(sesionInterceptor)
                 .addPathPatterns("/**")           // protege todo
                 .excludePathPatterns(             // excepto estas rutas
-                    "/login", "/logout",
+                    "/login", "/logout", "/error",
                     "/css/**", "/js/**", "/images/**"
                 );
     }

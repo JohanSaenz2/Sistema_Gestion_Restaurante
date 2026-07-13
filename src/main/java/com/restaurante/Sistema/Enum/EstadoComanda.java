@@ -1,5 +1,5 @@
 package com.restaurante.Sistema.Enum;
 
 public enum EstadoComanda {
-	pendiente, entregada,pagada, cancelada,en_preparacion; 
+	pendiente, en_preparacion, lista, entregada, pagada, cancelada;
 }
