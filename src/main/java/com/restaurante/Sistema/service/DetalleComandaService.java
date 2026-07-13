@@ -75,6 +75,16 @@ public class DetalleComandaService {
 		detalle.setEstado(EstadoItem.pendiente);
 
 		DetalleComanda guardado = detalleRepo.save(detalle);
+	
+		if (comanda != null) {
+		    BigDecimal nuevoTotal = detalleRepo
+		        .findByComandaId(comandaId)
+		        .stream()
+		        .map(DetalleComanda::getSubtotal)
+		        .reduce(BigDecimal.ZERO, BigDecimal::add);
+		    comanda.setTotal(nuevoTotal);
+		    comandaRepo.save(comanda);
+		}
 		return new DetalleComandaResponse(
 		    guardado.getId(),
 		    guardado.getComanda().getId(),

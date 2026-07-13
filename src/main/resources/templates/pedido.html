@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tomar Pedido</title>
@@ -223,6 +224,62 @@
             display: none;
             z-index: 999;
         }
+		@media (max-width: 768px) {
+		    /* Cambia de grid lado a lado a columna */
+		    .layout {
+		        grid-template-columns: 1fr;
+		        height: auto;
+		        min-height: calc(100vh - 54px);
+		    }
+
+		    /* Menú ocupa la mitad superior */
+		    .menu-panel {
+		        border-right: none;
+		        border-bottom: 1px solid #0f3460;
+		        max-height: 55vh;
+		        overflow-y: auto;
+		    }
+
+		    /* Carrito ocupa la mitad inferior */
+		    .cart-panel {
+		        min-height: 45vh;
+		        max-height: 45vh;
+		    }
+
+		    /* Productos en 2 columnas */
+		    .productos-grid {
+		        grid-template-columns: repeat(2, 1fr);
+		    }
+
+		    /* Categorías con scroll */
+		    .categorias {
+		        overflow-x: auto;
+		        flex-wrap: nowrap;
+		        -webkit-overflow-scrolling: touch;
+		        scrollbar-width: none;
+		        padding-bottom: 4px;
+		    }
+
+		    .categorias::-webkit-scrollbar { display: none; }
+
+		    .cat-btn { white-space: nowrap; }
+
+		    /* Navbar más compacto */
+		    .navbar { padding: 10px 16px; }
+		    .navbar h1 { font-size: 15px; }
+
+		    /* Botón enviar más grande para touch */
+		    .btn-enviar {
+		        padding: 16px;
+		        font-size: 16px;
+		    }
+		}
+
+		@media (max-width: 400px) {
+		    .productos-grid {
+		        grid-template-columns: 1fr;
+		    }
+		}
     </style>
 </head>
 <body>

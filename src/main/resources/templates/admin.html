@@ -253,6 +253,58 @@
             display: none;
             z-index: 999;
         }
+        @media (max-width: 768px) {
+    /* Navbar compacto */
+    .navbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 16px;
+    }
+
+    .navbar h1 { font-size: 15px; }
+
+    .navbar-right { gap: 8px; font-size: 12px; }
+
+    .navbar-right a {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    /* Tabs en scroll horizontal */
+    .tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding: 12px 16px 0;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+        white-space: nowrap;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    /* Cards de resumen en 2 columnas */
+    .resumen-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Tabla con scroll horizontal */
+    .tabla-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Formulario en columna única */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .tab-content { padding: 16px; }
+}
     </style>
 </head>
 <body>

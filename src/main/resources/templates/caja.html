@@ -356,9 +356,9 @@
         </div>
 
         <div th:each="c : ${entregadas}"
-             th:attr="data-id=${c.id},
-                      data-total=${c.total},
-                      data-mesa=${c.mesa.numero}"
+		th:attr="data-id=${c.id},
+		         data-total=${#numbers.formatDecimal(c.total, 1, 'POINT', 2, 'COMMA')},
+		         data-mesa=${c.mesa.numero}"
              class="comanda-card entregada"
              onclick="seleccionarComanda(this)">
 
@@ -547,7 +547,7 @@
 
         comandaSeleccionada = el.dataset.id;
         subtotalActual      = parseFloat(el.dataset.total);
-
+		console.log('Total recibido:', el.dataset.total, '→', subtotalActual);
         document.getElementById('mesaNumero').textContent = el.dataset.mesa;
         document.getElementById('sinSeleccion').style.display = 'none';
         document.getElementById('formPago').style.display     = 'flex';

@@ -1,4 +1,3 @@
-// controller/AdminViewController.java
 package com.restaurante.Sistema.controller;
 
 import com.restaurante.Sistema.model.Empleado;

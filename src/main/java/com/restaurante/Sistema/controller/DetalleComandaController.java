@@ -27,25 +27,21 @@ public class DetalleComandaController {
         );
     }
 
-    // PUT http://localhost:8080/api/detalles/1/cocina
     @PutMapping("/{id}/cocina")
     public DetalleComandaResponse enviarACocina(@PathVariable Long id) {
         return service.enviarACocina(id);
     }
 
-    // PUT http://localhost:8080/api/detalles/1/listo
     @PutMapping("/{id}/listo")
     public DetalleComandaResponse marcarListo(@PathVariable Long id) {
         return service.marcarListo(id);
     }
 
-    // PUT http://localhost:8080/api/detalles/1/entregar
     @PutMapping("/{id}/entregar")
     public DetalleComandaResponse entregar(@PathVariable Long id) {
         return service.entregar(id);
     }
 
-    // PUT http://localhost:8080/api/detalles/1/cancelar
     @PutMapping("/{id}/cancelar")
     public DetalleComandaResponse cancelar(@PathVariable Long id) {
         return service.cancelarItem(id);
