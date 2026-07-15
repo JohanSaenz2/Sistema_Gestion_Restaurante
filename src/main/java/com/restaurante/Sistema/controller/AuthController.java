@@ -11,53 +11,44 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AuthController {
 
-    private final EmpleadoRepository empleadoRepo;
+	private final EmpleadoRepository empleadoRepo;
 
-    public AuthController(EmpleadoRepository empleadoRepo) {
-        this.empleadoRepo = empleadoRepo;
-    }
+	public AuthController(EmpleadoRepository empleadoRepo) {
+		this.empleadoRepo = empleadoRepo;
+	}
 
-    // Muestra el login
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 
-    // Procesa el login
-    @PostMapping("/login")
-	public String procesarLogin(
-			@RequestParam String usuario,
-                                @RequestParam String password,
-                                HttpSession session,
-                                Model model) {
+	@PostMapping("/login")
+	public String procesarLogin(@RequestParam String usuario, @RequestParam String password, HttpSession session,
+			Model model) {
 
-        Empleado empleado = empleadoRepo
-            .findByUsuarioAndPassword(usuario, password);
+		Empleado empleado = empleadoRepo.findByUsuarioAndPassword(usuario, password);
 
-        if (empleado == null) {
-            model.addAttribute("error", "Usuario o contraseña incorrectos");
-            return "login";
-        }
+		if (empleado == null) {
+			model.addAttribute("error", "Usuario o contraseña incorrectos");
+			return "login";
+		}
 
-        // Guardar en sesión
-        session.setAttribute("empleado", empleado);
-        session.setAttribute("rol", empleado.getRol());
+		session.setAttribute("empleado", empleado);
+		session.setAttribute("rol", empleado.getRol());
 
-        // Redirigir según el rol
-        return switch (empleado.getRol()) {
-            case mesero        -> "redirect:/mesas";
-            case cocinero -> "redirect:/cocina";
-            case bartender -> "redirect:/bar";
-            case cajero -> "redirect:/caja";
-            case administrador -> "redirect:/admin";
-            default            -> "redirect:/login";
-        };
-    }
+		return switch (empleado.getRol()) {
+		case mesero -> "redirect:/mesas";
+		case cocinero -> "redirect:/cocina";
+		case bartender -> "redirect:/bar";
+		case cajero -> "redirect:/caja";
+		case administrador -> "redirect:/admin";
+		default -> "redirect:/login";
+		};
+	}
 
-    // Cerrar sesión
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
-    }
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/login";
+	}
 }
