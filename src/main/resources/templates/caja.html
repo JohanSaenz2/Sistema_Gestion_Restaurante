@@ -9,27 +9,28 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #1a1a2e;
+            background: #f3f5f8;
             min-height: 100vh;
-            color: #ecf0f1;
+            color: #1f2937;
         }
 
         .navbar {
-            background: #16213e;
+            background: #ffffff;
             padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #27ae60;
+            border-bottom: 2px solid #661B0A;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .navbar h1 { color: #27ae60; font-size: 20px; }
+        .navbar h1 { color: #661B0A; font-size: 20px; }
 
         .reloj {
-            color: #e2b04a;
+            color: #661B0A;
             font-size: 18px;
             font-weight: 700;
         }
@@ -45,35 +46,29 @@
 
         .logout:hover { background: #e74c3c; color: white; }
 
-        /* Layout principal — 3 columnas */
+        /* Layout principal — 2 columnas, mitad y mitad */
         .layout {
             display: grid;
-            grid-template-columns: 1fr 1fr 380px;
+            grid-template-columns: 1fr 1fr;
             gap: 0;
             height: calc(100vh - 54px);
         }
 
-        /* ── Columna 1: Listas para entregar ── */
-        .listas-panel {
-            padding: 20px;
-            overflow-y: auto;
-            border-right: 1px solid #0f3460;
-        }
-
-        /* ── Columna 2: Pendientes de cobro ── */
+        /* ── Columna 1: Pendientes de cobro ── */
         .cobro-panel {
             padding: 20px;
             overflow-y: auto;
-            border-right: 1px solid #0f3460;
+            border-right: 1px solid #dfe4ea;
         }
 
-        /* ── Columna 3: Formulario de pago ── */
+        /* ── Columna 2: Formulario de pago + facturas ── */
         .pago-panel {
-            background: #16213e;
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             padding: 20px;
-            overflow-y: auto;
+            height: 100%;
+            overflow: hidden;
         }
 
         .panel-titulo {
@@ -81,30 +76,31 @@
             font-weight: 600;
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #0f3460;
+            border-bottom: 1px solid #dfe4ea;
         }
 
-        .titulo-listas  { color: #3498db; border-color: #3498db; border-bottom: 2px solid #3498db; }
-        .titulo-cobro   { color: #27ae60; border-color: #27ae60; border-bottom: 2px solid #27ae60; }
-        .titulo-pago    { color: #e2b04a; }
+        .titulo-listas  { color: #661B0A; border-color: #661B0A; border-bottom: 2px solid #661B0A; }
+        .titulo-cobro   { color: #1e3a5f; border-color: #1e3a5f; border-bottom: 2px solid #1e3a5f; }
+        .titulo-pago    { color: #661B0A; }
 
         /* Cards de comanda */
         .comanda-card {
-            background: #16213e;
+            background: #ffffff;
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 12px;
             border-left: 4px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .comanda-card.lista     { border-left-color: #3498db; }
+        .comanda-card.lista     { border-left-color: #661B0A; }
         .comanda-card.entregada { border-left-color: #27ae60; }
 
         .comanda-card.seleccionada {
-            border-color: #e2b04a;
-            background: #1a2a4a;
+            border-color: #1e3a5f;
+            background: #eaf0f8;
         }
 
         .comanda-card:hover { transform: translateX(3px); }
@@ -119,17 +115,17 @@
         .comanda-mesa {
             font-size: 17px;
             font-weight: 700;
-            color: #e2b04a;
+            color: #661B0A;
         }
 
-        .comanda-hora { font-size: 12px; color: #7f8c8d; }
+        .comanda-hora { font-size: 12px; color: #6b7280; }
 
         .item-row {
             display: flex;
             justify-content: space-between;
             padding: 5px 0;
             font-size: 13px;
-            border-bottom: 1px solid #0f3460;
+            border-bottom: 1px solid #dfe4ea;
         }
 
         .item-row:last-child { border-bottom: none; }
@@ -144,13 +140,13 @@
         .comanda-total {
             font-size: 15px;
             font-weight: 700;
-            color: #27ae60;
+            color: #661B0A;
         }
 
         /* Botón entregar */
         .btn-entregar {
             padding: 7px 14px;
-            background: #3498db;
+            background: #e74c3c;
             border: none;
             border-radius: 6px;
             color: white;
@@ -160,22 +156,30 @@
             transition: background 0.2s;
         }
 
-        .btn-entregar:hover { background: #2980b9; }
+        .btn-entregar:hover { background: #c0392b; }
 
         .vacio {
             text-align: center;
-            color: #7f8c8d;
+            color: #6b7280;
             padding: 40px 20px;
             font-size: 14px;
         }
 
-        /* ── Formulario de pago ── */
+        /* ── Zona superior de la columna de pago (~5/6 del alto) ── */
+        .pago-form-wrapper {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
         .sin-seleccion {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #7f8c8d;
+            color: #6b7280;
             font-size: 14px;
             text-align: center;
         }
@@ -185,7 +189,7 @@
         .form-group label {
             display: block;
             font-size: 12px;
-            color: #bdc3c7;
+            color: #4b5563;
             margin-bottom: 5px;
             font-weight: 500;
         }
@@ -194,17 +198,17 @@
         .form-group input {
             width: 100%;
             padding: 9px 12px;
-            background: #0f3460;
-            border: 1px solid #1a4a7a;
+            background: #eef1f5;
+            border: 1px solid #cfd6df;
             border-radius: 7px;
-            color: #ecf0f1;
+            color: #1f2937;
             font-size: 13px;
         }
 
         .form-group select:focus,
         .form-group input:focus {
             outline: none;
-            border-color: #e2b04a;
+            border-color: #1e3a5f;
         }
 
         .metodos-grid {
@@ -216,9 +220,9 @@
         .metodo-btn {
             padding: 9px 4px;
             border-radius: 7px;
-            border: 2px solid #0f3460;
+            border: 2px solid #dfe4ea;
             background: transparent;
-            color: #bdc3c7;
+            color: #4b5563;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
@@ -227,13 +231,13 @@
         }
 
         .metodo-btn.selected {
-            border-color: #e2b04a;
-            background: rgba(226,176,74,0.15);
-            color: #e2b04a;
+            border-color: #1e3a5f;
+            background: rgba(30, 58, 95, 0.15);
+            color: #1e3a5f;
         }
 
         .resumen-pago {
-            background: #0f3460;
+            background: #eef1f5;
             border-radius: 8px;
             padding: 14px;
         }
@@ -243,34 +247,52 @@
             justify-content: space-between;
             font-size: 13px;
             padding: 5px 0;
-            border-bottom: 1px solid #1a4a7a;
+            border-bottom: 1px solid #cfd6df;
         }
 
         .resumen-fila:last-child {
             border-bottom: none;
             font-size: 17px;
             font-weight: 700;
-            color: #e2b04a;
+            color: #661B0A;
             padding-top: 8px;
             margin-top: 4px;
         }
 
-        .resumen-fila.descuento { color: #2ecc71; }
+        .resumen-fila.descuento { color: #661B0A; }
 
         .btn-cobrar {
             padding: 13px;
-            background: #27ae60;
+            background: #1e3a5f;
             border: none;
             border-radius: 8px;
-            color: white;
+            color: #ffffff;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .btn-cobrar:hover    { background: #2ecc71; }
-        .btn-cobrar:disabled { background: #2d4a3a; color: #555; cursor: not-allowed; }
+        .btn-cobrar:hover    { background: #2b4f80; }
+        .btn-cobrar:disabled { background: #c9d1dc; color: #8b95a3; cursor: not-allowed; }
+
+        /* ── Zona inferior: facturas, ~1/6 del alto de la columna 3 ── */
+        .factura-panel {
+            flex: 0 0 16.66%;
+            min-height: 0;
+            overflow-y: auto;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #dfe4ea;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .factura-panel .panel-titulo {
+            font-size: 13px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+        }
 
         /* Toast */
         .toast {
@@ -285,6 +307,10 @@
             z-index: 999;
             color: white;
         }
+
+        /* Ajustes de paleta clara para estilos en línea (sin modificar el HTML) */
+        .navbar span[style*="#cccccc"] { color: #4b5563 !important; }
+        #btnVerFactura { background: #1e3a5f !important; color: #ffffff !important; }
     </style>
 </head>
 <body>
@@ -293,58 +319,18 @@
     <h1>💰 Caja</h1>
     <div style="display:flex; align-items:center; gap:20px;">
         <span class="reloj" id="reloj">00:00:00</span>
-        <span style="color:#bdc3c7; font-size:14px;"
+        <span style="color:#cccccc; font-size:14px;"
               th:text="${empleado.nombre}">Cajero</span>
+        <a href="/caja/nuevo-cliente" class="logout">Agregar Nuevo Cliente</a>
         <a href="/logout" class="logout">Salir</a>
+
     </div>
 </nav>
 
 <div class="layout">
 
-    <!-- ── Columna 1: Listas para entregar ── -->
-    <div class="listas-panel">
-        <div class="panel-titulo titulo-listas">
-            🔵 Listas para entregar
-            (<span th:text="${#lists.size(listas)}">0</span>)
-        </div>
 
-        <div th:if="${#lists.isEmpty(listas)}" class="vacio">
-            No hay comandas listas
-        </div>
-
-        <div th:each="c : ${listas}"
-             class="comanda-card lista">
-
-            <div class="comanda-header">
-                <span class="comanda-mesa"
-                      th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
-                <span class="comanda-hora"
-                      th:text="${#temporals.format(c.fecha, 'HH:mm')}">
-                    12:30
-                </span>
-            </div>
-
-            <div th:each="d : ${c.detalles}" class="item-row">
-                <span th:text="${d.producto.nombre}">Hamburguesa</span>
-                <span th:text="'x' + ${d.cantidad}">x1</span>
-            </div>
-
-            <div class="comanda-footer">
-                <span class="comanda-total"
-                      th:text="'$' + ${#numbers.formatDecimal(c.total, 1, 2)}">
-                    $0.00
-                </span>
-                <!-- Botón que avanza el estado a ENTREGADA -->
-                <button class="btn-entregar"
-                        th:attr="data-id=${c.id}"
-                        onclick="marcarEntregada(this)">
-                    ✅ Marcar entregada
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Columna 2: Pendientes de cobro ── -->
+    <!-- ── Columna 1: Pendientes de cobro ── -->
     <div class="cobro-panel">
         <div class="panel-titulo titulo-cobro">
             🟢 Pendientes de cobro
@@ -355,12 +341,13 @@
             No hay comandas pendientes de cobro
         </div>
 
-        <div th:each="c : ${entregadas}"
-		th:attr="data-id=${c.id},
-		         data-total=${#numbers.formatDecimal(c.total, 1, 'POINT', 2, 'COMMA')},
-		         data-mesa=${c.mesa.numero}"
-             class="comanda-card entregada"
-             onclick="seleccionarComanda(this)">
+       <div th:each="c : ${entregadas}"
+     th:data-id="${c.id}"
+     th:data-total="${c.total}"
+     th:data-total-formateado="${#numbers.formatDecimal(c.total, 1, 'POINT', 2, 'COMMA')}"
+     th:data-mesa="${c.mesa.numero}"
+     class="comanda-card entregada"
+     onclick="seleccionarComanda(this)">
 
             <div class="comanda-header">
                 <span class="comanda-mesa"
@@ -384,127 +371,147 @@
                       th:text="'Total: $' + ${#numbers.formatDecimal(c.total, 1, 2)}">
                     $0.00
                 </span>
-                <span style="font-size:12px; color:#7f8c8d;">
+                <span style="font-size:12px; color:#999999;">
                     Click para cobrar →
                 </span>
             </div>
         </div>
-    </div>
-
-    <!-- ── Columna 3: Formulario de pago ── -->
-    <div class="pago-panel">
-        <div class="panel-titulo titulo-pago">💳 Procesar pago</div>
-
-        <div class="sin-seleccion" id="sinSeleccion">
-            ← Selecciona una comanda para cobrar
-        </div>
-
-        <div class="form-pago" id="formPago" style="display:none;">
-
-            <div style="font-size:15px; font-weight:600; color:#e2b04a;">
-                Mesa <span id="mesaNumero">-</span>
+         <!-- ── Facturas, franja inferior (~1/6 del alto de la columna) ── -->
+        <div class="factura-panel">
+            <div class="panel-titulo" style="font-size: 13px; margin-bottom: 8px;">
+                🧾 Ver factura generada
             </div>
-
-            <!-- Tipo de comprobante -->
             <div class="form-group">
-                <label>Tipo de comprobante</label>
-                <select id="tipoComprobante" onchange="actualizarResumen()">
-                    <option th:each="t : ${tiposComprobante}"
-                            th:value="${t.name()}"
-                            th:text="${t.name().replace('_', ' ')}">
+                <select id="facturaSelect" onchange="onFacturaSeleccionada()">
+                    <option value="">-- Elige una factura --</option>
+                    <option th:each="c : ${comprobantes}"
+                            th:value="${c.id}"
+                            th:text="${c.numero} + ' — $' + ${#numbers.formatDecimal(c.total, 1, 2)} + ' — ' + ${#temporals.format(c.fechaEmision, 'dd/MM/yyyy HH:mm')}">
+                        FAC-000000001 — $0.00 — 01/01/2026 00:00
                     </option>
                 </select>
             </div>
-
-            <!-- Cliente — solo para factura -->
-            <div class="form-group" id="grupoCliente" style="display:none;">
-                <label>Cliente</label>
-                <select id="clienteId">
-                    <option value="">-- Seleccionar --</option>
-                    <option th:each="cl : ${clientes}"
-                            th:value="${cl.clienteID}"
-                            th:text="${cl.nombre} + ' - ' + ${cl.identificacion}">
-                    </option>
-                </select>
-            </div>
-
-            <!-- Método de pago -->
-            <div class="form-group">
-                <label>Método de pago</label>
-                <div class="metodos-grid">
-                    <button class="metodo-btn selected"
-                            onclick="selMetodo('EFECTIVO', this)">
-                        💵 Efectivo
-                    </button>
-                    <button class="metodo-btn"
-                            onclick="selMetodo('TRANSFERENCIA', this)">
-                        🏦 Transferencia
-                    </button>
-                    <button class="metodo-btn"
-                            onclick="selMetodo('QR', this)">
-                        📱 QR
-                    </button>
-                </div>
-            </div>
-
-            <!-- Propina -->
-            <div class="form-group">
-                <label>Propina ($)</label>
-                <input type="number" id="propina" value="0"
-                       min="0" step="0.50"
-                       oninput="actualizarResumen()"/>
-            </div>
-
-            <!-- Descuento opcional -->
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="aplicarDescuento"
-                           onchange="toggleDescuento()"/>
-                    Aplicar descuento
-                </label>
-            </div>
-
-            <div id="grupoDescuento" style="display:none;">
-                <div class="form-group">
-                    <label>Porcentaje (%)</label>
-                    <input type="number" id="porcentajeDesc"
-                           value="10" min="1" max="100"
-                           oninput="actualizarResumen()"/>
-                </div>
-                <div class="form-group">
-                    <label>Motivo</label>
-                    <input type="text" id="motivoDesc"
-                           placeholder="Ej: navidad, promocion"/>
-                </div>
-            </div>
-
-            <!-- Resumen -->
-            <div class="resumen-pago">
-                <div class="resumen-fila">
-                    <span>Subtotal</span>
-                    <span id="rSubtotal">$0.00</span>
-                </div>
-                <div class="resumen-fila descuento"
-                     id="filaDescuento" style="display:none;">
-                    <span>Descuento</span>
-                    <span id="rDescuento">-$0.00</span>
-                </div>
-                <div class="resumen-fila">
-                    <span>Propina</span>
-                    <span id="rPropina">$0.00</span>
-                </div>
-                <div class="resumen-fila">
-                    <span>TOTAL</span>
-                    <span id="rTotal">$0.00</span>
-                </div>
-            </div>
-
-            <button class="btn-cobrar" id="btnCobrar"
-                    onclick="procesarPago()">
-                Cobrar
+            <button class="btn-cobrar" id="btnVerFactura" disabled
+                    style="background:#661B0A; color:#0d0d0d;"
+                    onclick="verFacturaSeleccionada()">
+                Ver / Imprimir factura
             </button>
         </div>
+
     </div>
+
+    <!-- ── Columna 2: Formulario de pago-->
+    <div class="pago-panel">
+
+        <div class="pago-form-wrapper">
+            <div class="panel-titulo titulo-pago">💳 Procesar pago</div>
+
+            <div class="sin-seleccion" id="sinSeleccion">
+                ← Selecciona una comanda para cobrar
+            </div>
+
+            <div class="form-pago" id="formPago" style="display:none;">
+
+                <div style="font-size:15px; font-weight:600; color:#661B0A;">
+                    Mesa <span id="mesaNumero">-</span>
+                </div>
+
+                <!-- Tipo de comprobante -->
+                <div class="form-group">
+                    <label>Tipo de comprobante</label>
+                    <select id="tipoComprobante" onchange="actualizarResumen()">
+                        <option th:each="t : ${tiposComprobante}"
+                                th:value="${t.name()}"
+                                th:text="${t.name().replace('_', ' ')}">
+                        </option>
+                    </select>
+                </div>
+
+
+                <!-- Cliente — solo para factura -->
+                <div class="form-group" id="grupoCliente" style="display:none;">
+                    <label>Cliente</label>
+                    <select id="clienteId">
+                        <option value="">-- Seleccionar --</option>
+                        <option th:each="cl : ${clientes}"
+                                th:value="${cl.clienteID}"
+                                th:text="${cl.nombre} + ' - ' + ${cl.identificacion}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Método de pago -->
+                <div class="form-group">
+                    <label>Método de pago</label>
+                    <div class="metodos-grid">
+                        <button class="metodo-btn selected"
+                                onclick="selMetodo('efectivo', this)">
+                            💵 Efectivo
+                        </button>
+                        <button class="metodo-btn"
+                                onclick="selMetodo('transferencia', this)">
+                            🏦 Transferencia
+                        </button>
+                        <button class="metodo-btn"
+                                onclick="selMetodo('qr', this)">
+                            📱 QR
+                        </button>
+                    </div>
+                </div>
+
+              
+                <!-- Descuento opcional -->
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="aplicarDescuento"
+                               onchange="toggleDescuento()"/>
+                        Aplicar descuento
+                    </label>
+                </div>
+
+                <div id="grupoDescuento" style="display:none;">
+                    <div class="form-group">
+                        <label>Porcentaje (%)</label>
+                        <input type="number" id="porcentajeDesc"
+                               value="10" min="1" max="100"
+                               oninput="actualizarResumen()"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Motivo</label>
+                        <input type="text" id="motivoDesc"
+                               placeholder="Ej: navidad, promocion"/>
+                    </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="resumen-pago">
+                    <div class="resumen-fila">
+                        <span>Subtotal</span>
+                        <span id="rSubtotal">$0.00</span>
+
+                    </div>
+                    <div class="resumen-fila descuento"
+                         id="filaDescuento" style="display:none;">
+                        <span>Descuento</span>
+                        <span id="rDescuento">-$0.00</span>
+                    </div>
+                    <div class="resumen-fila">
+                        <span>TOTAL</span>
+                        <span id="rTotal">$0.00</span>
+                    </div>
+                </div>
+
+                <button class="btn-cobrar" id="btnCobrar"
+                        onclick="procesarPago()">
+                    Cobrar
+                </button>
+
+            </div>
+        </div>
+
+
+    </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -512,9 +519,21 @@
 <script>
     let comandaSeleccionada = null;
     let subtotalActual      = 0;
-    let metodoPago          = 'EFECTIVO';
+    let metodoPago          = 'efectivo';
 
     // Reloj
+    function onFacturaSeleccionada() {
+        const id  = document.getElementById('facturaSelect').value;
+        const btn = document.getElementById('btnVerFactura');
+        btn.disabled = !id;
+    }
+
+    function verFacturaSeleccionada() {
+        const id = document.getElementById('facturaSelect').value;
+        if (!id) return;
+        window.open(`/api/comprobantes/${id}/pdf`, '_blank');
+    }
+
     function actualizarReloj() {
         document.getElementById('reloj').textContent =
             new Date().toLocaleTimeString('es-EC');
@@ -522,22 +541,6 @@
     setInterval(actualizarReloj, 1000);
     actualizarReloj();
 
-    // ── Marcar comanda como entregada ──
-    async function marcarEntregada(btn) {
-        const id = btn.dataset.id;
-        btn.disabled    = true;
-        btn.textContent = '...';
-
-        try {
-            await fetch(`/api/comandas/${id}/avanzar`, { method: 'PUT' });
-            mostrarToast('✅ Comanda marcada como entregada', '#27ae60');
-            setTimeout(() => location.reload(), 1000);
-        } catch (err) {
-            btn.disabled    = false;
-            btn.textContent = '✅ Marcar entregada';
-            mostrarToast('❌ Error al actualizar', '#e74c3c');
-        }
-    }
 
     // ── Seleccionar comanda para cobrar ──
     function seleccionarComanda(el) {
@@ -546,7 +549,9 @@
         el.classList.add('seleccionada');
 
         comandaSeleccionada = el.dataset.id;
+
         subtotalActual      = parseFloat(el.dataset.total);
+
 		console.log('Total recibido:', el.dataset.total, '→', subtotalActual);
         document.getElementById('mesaNumero').textContent = el.dataset.mesa;
         document.getElementById('sinSeleccion').style.display = 'none';
@@ -572,35 +577,29 @@
     }
 
     // ── Actualizar resumen ──
-    function actualizarResumen() {
-        const propina     = parseFloat(document.getElementById('propina').value) || 0;
-        const aplicarDesc = document.getElementById('aplicarDescuento').checked;
-        const porcentaje  = parseFloat(document.getElementById('porcentajeDesc').value) || 0;
-        const tipo        = document.getElementById('tipoComprobante').value;
+   function actualizarResumen() {
+    const aplicarDesc = document.getElementById('aplicarDescuento').checked;
+    const porcentaje  = parseFloat(document.getElementById('porcentajeDesc').value) || 0;
+    const tipo        = document.getElementById('tipoComprobante').value;
 
-        document.getElementById('grupoCliente').style.display =
-            tipo === 'factura' ? 'block' : 'none';
+    document.getElementById('grupoCliente').style.display =
+        tipo === 'factura' ? 'block' : 'none';
 
-        let descuento = 0;
-        if (aplicarDesc) descuento = subtotalActual * (porcentaje / 100);
+    let descuento = 0;
+    if (aplicarDesc) descuento = subtotalActual * (porcentaje / 100);
 
-        const total = subtotalActual - descuento + propina;
+    const total = subtotalActual - descuento;
 
-        document.getElementById('rSubtotal').textContent =
-            '$' + subtotalActual.toFixed(2);
-        document.getElementById('rPropina').textContent =
-            '$' + propina.toFixed(2);
-        document.getElementById('rTotal').textContent =
-            '$' + total.toFixed(2);
+    document.getElementById('rSubtotal').textContent = '$' + subtotalActual.toFixed(2);
+    document.getElementById('rTotal').textContent    = '$' + total.toFixed(2);
 
-        if (aplicarDesc && descuento > 0) {
-            document.getElementById('filaDescuento').style.display = 'flex';
-            document.getElementById('rDescuento').textContent =
-                '-$' + descuento.toFixed(2);
-        } else {
-            document.getElementById('filaDescuento').style.display = 'none';
-        }
+    if (aplicarDesc && descuento > 0) {
+        document.getElementById('filaDescuento').style.display = 'flex';
+        document.getElementById('rDescuento').textContent = '-$' + descuento.toFixed(2);
+    } else {
+        document.getElementById('filaDescuento').style.display = 'none';
     }
+}
 
     // ── Procesar pago ──
     async function procesarPago() {
@@ -612,22 +611,28 @@
 
         const tipo        = document.getElementById('tipoComprobante').value;
         const clienteId   = document.getElementById('clienteId').value || null;
-        const propina     = parseFloat(document.getElementById('propina').value) || 0;
+        const propina     = 0;
         const aplicarDesc = document.getElementById('aplicarDescuento').checked;
         const porcentaje  = parseFloat(document.getElementById('porcentajeDesc').value) || 0;
         const motivo      = document.getElementById('motivoDesc')?.value || 'descuento';
 
         try {
             // 1. Generar comprobante
+            const ivaPct =0;
             const resComp = await fetch('/api/comprobantes/generar', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body:    JSON.stringify({
                     comandaId: parseInt(comandaSeleccionada),
                     tipo,
-                    clienteId: clienteId ? parseInt(clienteId) : null
+                    clienteId: clienteId ? parseInt(clienteId) : null,
+                    ivaPorcentaje: ivaPct / 100
                 })
             });
+            if (!resComp.ok) {
+                const errTxt = await resComp.text();
+                throw new Error('No se pudo generar el comprobante: ' + errTxt);
+            }
             const comprobante = await resComp.json();
 
             // 2. Procesar pago
@@ -650,13 +655,14 @@
             await fetch(`/api/comandas/${comandaSeleccionada}/avanzar`,
                 { method: 'PUT' });
 
-            mostrarToast('✅ Pago procesado correctamente', '#27ae60');
+            mostrarToast('✅ Pago procesado correctamente', '#1a1a1a');
+            window.open(`/api/comprobantes/${comprobante.id}/pdf`, '_blank');
             setTimeout(() => location.reload(), 1500);
 
         } catch (err) {
             btn.disabled    = false;
             btn.textContent = 'Cobrar';
-            mostrarToast('❌ Error al procesar el pago', '#e74c3c');
+            mostrarToast('❌ ' + (err.message || 'Error al procesar el pago'), '#e74c3c');
         }
     }
 
@@ -671,6 +677,6 @@
     // Auto-refresco cada 30 segundos
     setTimeout(() => location.reload(), 30000);
 </script>
-
+<div th:replace="~{fragments/notificaciones-mesero :: notificacionesPedidoNuevo('caja')}"></div>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package com.restaurante.Sistema.controller;
 
-import com.restaurante.Sistema.Enum.EstadoComanda;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.service.ComandaService;
 import jakarta.servlet.http.HttpSession;
@@ -17,14 +16,13 @@ public class BarViewController {
         this.comandaService = comandaService;
     }
 
+   
     @GetMapping("/bar")
     public String bar(Model model, HttpSession session) {
         Empleado empleado = (Empleado) session.getAttribute("empleado");
         model.addAttribute("empleado", empleado);
-        model.addAttribute("pendientes",
-            comandaService.porEstado(EstadoComanda.pendiente));
-        model.addAttribute("enPreparacion",
-            comandaService.porEstado(EstadoComanda.en_preparacion));
+        model.addAttribute("comandas",
+            comandaService.activasPorEstacion(com.restaurante.Sistema.Enum.Estacion.bar));
         return "bar";
     }
 }

@@ -1,5 +1,4 @@
 package com.restaurante.Sistema;
-//src/main/java/com/saenz/iluminacion/TestConexion.java
 
 
 import org.springframework.boot.CommandLineRunner;

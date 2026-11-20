@@ -10,28 +10,29 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #1a1a2e;
+            background: #f3f5f8;
             min-height: 100vh;
-            color: #ecf0f1;
+            color: #1f2937;
         }
 
         .navbar {
-            background: #16213e;
+            background: #ffffff;
             padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #e2b04a;
+            border-bottom: 2px solid #661B0A;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .navbar h1 { color: #e2b04a; font-size: 18px; }
+        .navbar h1 { color: #661B0A; font-size: 18px; }
 
         .btn-back {
-            color: #7f8c8d;
+            color: #6b7280;
             text-decoration: none;
             font-size: 13px;
         }
-        .btn-back:hover { color: #e2b04a; }
+        .btn-back:hover { color: #661B0A; }
 
         .layout {
             display: grid;
@@ -42,7 +43,7 @@
         .menu-panel {
             padding: 24px;
             overflow-y: auto;
-            border-right: 1px solid #0f3460;
+            border-right: 1px solid #dfe4ea;
         }
 
         .categorias {
@@ -55,18 +56,18 @@
         .cat-btn {
             padding: 8px 16px;
             border-radius: 20px;
-            border: 1px solid #0f3460;
+            border: 1px solid #dfe4ea;
             background: transparent;
-            color: #bdc3c7;
+            color: #4b5563;
             cursor: pointer;
             font-size: 13px;
             transition: all 0.2s;
         }
 
         .cat-btn.active, .cat-btn:hover {
-            background: #e2b04a;
-            color: #1a1a2e;
-            border-color: #e2b04a;
+            background: #1e3a5f;
+            color: #ffffff;
+            border-color: #1e3a5f;
         }
 
         .productos-grid {
@@ -76,25 +77,26 @@
         }
 
         .producto-card {
-            background: #16213e;
+            background: #ffffff;
             border-radius: 10px;
             padding: 20px 16px;
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
         .producto-card:hover {
-            border-color: #e2b04a;
+            border-color: #1e3a5f;
             transform: translateY(-2px);
         }
 
         .producto-nombre { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-        .producto-cat    { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; }
-        .producto-precio { font-size: 18px; font-weight: 700; color: #e2b04a; }
+        .producto-cat    { font-size: 12px; color: #6b7280; margin-bottom: 10px; }
+        .producto-precio { font-size: 18px; font-weight: 700; color: #661B0A; }
 
         .cart-panel {
-            background: #16213e;
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -105,17 +107,18 @@
             font-weight: 600;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #0f3460;
-            color: #e2b04a;
+            border-bottom: 1px solid #dfe4ea;
+            color: #661B0A;
         }
 
         .cart-items { flex: 1; overflow-y: auto; }
 
         .cart-item {
-            background: #0f3460;
+            background: #eef1f5;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
         .cart-item-header {
@@ -126,7 +129,7 @@
         }
 
         .cart-item-nombre { font-size: 14px; font-weight: 600; }
-        .cart-item-precio { color: #e2b04a; font-weight: 700; font-size: 14px; }
+        .cart-item-precio { color: #661B0A; font-weight: 700; font-size: 14px; }
 
         .cart-item-qty {
             display: flex;
@@ -138,14 +141,14 @@
         .qty-btn {
             width: 26px; height: 26px;
             border-radius: 50%;
-            border: 1px solid #1a4a7a;
-            background: #1a4a7a;
-            color: white;
+            border: 1px solid #cfd6df;
+            background: #e3e8ee;
+            color: #1f2937;
             cursor: pointer;
             font-size: 14px;
         }
 
-        .qty-btn:hover { background: #e2b04a; border-color: #e2b04a; color: #1a1a2e; }
+        .qty-btn:hover { background: #1e3a5f; border-color: #1e3a5f; color: #ffffff; }
 
         .adicionales-lista {
             display: flex;
@@ -158,23 +161,61 @@
             font-size: 11px;
             padding: 3px 10px;
             border-radius: 12px;
-            border: 1px solid #1a4a7a;
+            border: 1px solid #cfd6df;
             background: transparent;
-            color: #bdc3c7;
+            color: #4b5563;
             cursor: pointer;
             transition: all 0.15s;
         }
 
         .adicional-tag.selected {
-            background: #e2b04a;
-            color: #1a1a2e;
-            border-color: #e2b04a;
+            background: #1e3a5f;
+            color: #ffffff;
+            border-color: #1e3a5f;
             font-weight: 600;
+        }
+
+        /* ===== Servicio: Servirse / Llevar ===== */
+        .servicios {
+            padding-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .servicios-botones {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .btn-servicio {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #cfd6df;
+            background: transparent;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-servicio:hover {
+            border-color: #1e3a5f;
+            color: #1e3a5f;
+        }
+
+        .btn-servicio.active {
+            background: #1e3a5f;
+            border-color: #1e3a5f;
+            color: #ffffff;
         }
 
         .cart-footer {
             padding-top: 16px;
-            border-top: 1px solid #0f3460;
+            border-top: 1px solid #dfe4ea;
             margin-top: 8px;
         }
 
@@ -186,27 +227,27 @@
             margin-bottom: 16px;
         }
 
-        .cart-total span:last-child { color: #e2b04a; }
+        .cart-total span:last-child { color: #661B0A; }
 
         .btn-enviar {
             width: 100%;
             padding: 14px;
-            background: #27ae60;
+            background: #1e3a5f;
             border: none;
             border-radius: 8px;
-            color: white;
+            color: #ffffff;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .btn-enviar:hover { background: #2ecc71; }
-        .btn-enviar:disabled { background: #2d4a3a; color: #555; cursor: not-allowed; }
+        .btn-enviar:hover { background: #2b4f80; }
+        .btn-enviar:disabled { background: #c9d1dc; color: #8b95a3; cursor: not-allowed; }
 
         .empty-cart {
             text-align: center;
-            color: #7f8c8d;
+            color: #6b7280;
             padding: 40px 0;
             font-size: 14px;
         }
@@ -215,8 +256,9 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: #27ae60;
-            color: white;
+            background: #1a1a1a;
+            border: 1px solid #661B0A;
+            color: #ffffff;
             padding: 14px 20px;
             border-radius: 8px;
             font-size: 14px;
@@ -235,7 +277,7 @@
 		    /* Menú ocupa la mitad superior */
 		    .menu-panel {
 		        border-right: none;
-		        border-bottom: 1px solid #0f3460;
+		        border-bottom: 1px solid #dfe4ea;
 		        max-height: 55vh;
 		        overflow-y: auto;
 		    }
@@ -273,6 +315,11 @@
 		        padding: 16px;
 		        font-size: 16px;
 		    }
+
+            /* Botones de servicio más cómodos para touch */
+            .btn-servicio {
+                padding: 12px;
+            }
 		}
 
 		@media (max-width: 400px) {
@@ -280,6 +327,9 @@
 		        grid-template-columns: 1fr;
 		    }
 		}
+
+        /* Ajustes de paleta clara para estilos en línea (sin modificar el HTML) */
+        .navbar span[style*="#cccccc"] { color: #4b5563 !important; }
     </style>
 </head>
 <body>
@@ -289,7 +339,7 @@
         <a href="/mesas" class="btn-back">← Volver</a>
         <h1>Tomar Pedido</h1>
     </div>
-    <span style="color:#bdc3c7; font-size:14px;"
+    <span style="color:#cccccc; font-size:14px;"
           th:text="'Mesa ' + ${mesa.numero} + ' · ' + ${empleado.nombre}">
     </span>
 </nav>
@@ -310,7 +360,8 @@
                  th:attr="data-cat=${p.estacion},
                           data-id=${p.id},
                           data-nombre=${p.nombre},
-                          data-precio=${p.precioBase}"
+                          data-precio=${p.precioBase},
+                          data-categoria=${p.categoria}"
                  class="producto-card"
                  onclick="abrirProducto(this)">
 
@@ -334,11 +385,22 @@
             <div class="empty-cart">Agrega productos al pedido</div>
         </div>
 
+        <div class="servicios">
+            Para:
+            <div class="servicios-botones">
+                <button type="button" class="btn-servicio active" data-value="SERVIRSE"
+                        onclick="seleccionarServicio(this)">Servirse</button>
+                <button type="button" class="btn-servicio" data-value="LLEVAR"
+                        onclick="seleccionarServicio(this)">Llevar</button>
+            </div>
+        </div>
+
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Total estimado</span>
                 <span id="totalDisplay">$0.00</span>
             </div>
+          
             <button class="btn-enviar"
                     id="btnEnviar"
                     disabled
@@ -361,25 +423,42 @@
 <!-- Script 2: lógica de la página -->
 <script>
     let carrito = [];
+    let nextLineId = 1;
+
+    // Valor por defecto = el botón que tiene la clase "active" en el HTML
+    let servicio = document.querySelector('.btn-servicio.active').dataset.value;
+
+    function seleccionarServicio(btn) {
+        document.querySelectorAll('.btn-servicio')
+                .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        servicio = btn.dataset.value;
+    }
 
     function abrirProducto(el) {
-        const id     = parseInt(el.dataset.id);
-        const nombre = el.dataset.nombre;
-        const precio = parseFloat(el.dataset.precio);
+        const id        = parseInt(el.dataset.id);
+        const nombre    = el.dataset.nombre;
+        const precio    = parseFloat(el.dataset.precio);
+        const categoria = el.dataset.categoria;
 
-        const existente = carrito.find(i => i.id === id);
+        // Solo se agrupa con una línea del mismo producto que AÚN no
+        // tenga adicionales — si ya la personalizaron, se crea una línea nueva.
+        const existente = carrito.find(i => i.id === id && i.adicionales.length === 0);
         if (existente) {
             existente.cantidad++;
             renderCarrito();
             return;
         }
 
-        carrito.push({ id, nombre, precio, cantidad: 1, adicionales: [] });
+        carrito.push({
+            lineId: nextLineId++,
+            id, nombre, precio, cantidad: 1, categoria, adicionales: []
+        });
         renderCarrito();
     }
 
-    function toggleAdicional(productoId, adicionalId, precio) {
-        const item = carrito.find(i => i.id === productoId);
+    function toggleAdicional(lineId, adicionalId, precio) {
+        const item = carrito.find(i => i.lineId === lineId);
         if (!item) return;
 
         const idx = item.adicionales.findIndex(a => a.id === adicionalId);
@@ -391,11 +470,11 @@
         renderCarrito();
     }
 
-    function cambiarCantidad(id, delta) {
-        const item = carrito.find(i => i.id === id);
+    function cambiarCantidad(lineId, delta) {
+        const item = carrito.find(i => i.lineId === lineId);
         if (!item) return;
         item.cantidad += delta;
-        if (item.cantidad <= 0) carrito = carrito.filter(i => i.id !== id);
+        if (item.cantidad <= 0) carrito = carrito.filter(i => i.lineId !== lineId);
         renderCarrito();
     }
 
@@ -422,11 +501,16 @@
             const subtotal   = precioUnit * item.cantidad;
             totalGeneral    += subtotal;
 
-            const tagsHtml = adicionalesDisponibles.map(a => {
+            const adicionalesDelProducto = adicionalesDisponibles.filter(a => {
+                const aplica = (a.aplicaA || '').trim().toLowerCase();
+                return aplica === 'todos' || aplica === item.categoria.trim().toLowerCase();
+            });
+
+            const tagsHtml = adicionalesDelProducto.map(a => {
                 const sel = item.adicionales.find(x => x.id === a.adicionalId);
                 const cls = sel ? 'adicional-tag selected' : 'adicional-tag';
                 return `<button class="${cls}"
-                    onclick="toggleAdicional(${item.id},
+                    onclick="toggleAdicional(${item.lineId},
                              ${a.adicionalId},
                              ${a.precio})">
                     +${a.nombre} $${parseFloat(a.precio).toFixed(2)}
@@ -443,10 +527,10 @@
                 </div>
                 <div class="cart-item-qty">
                     <button class="qty-btn"
-                        onclick="cambiarCantidad(${item.id}, -1)">−</button>
+                        onclick="cambiarCantidad(${item.lineId}, -1)">−</button>
                     <span>${item.cantidad}</span>
                     <button class="qty-btn"
-                        onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                        onclick="cambiarCantidad(${item.lineId}, 1)">+</button>
                 </div>
                 <div class="adicionales-lista">${tagsHtml}</div>
             </div>`;
@@ -466,7 +550,7 @@
             const resComanda = await fetch('/api/comandas', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ mesaId, empleadoId })
+                body:    JSON.stringify({ mesaId, empleadoId, servicio })
             });
             const comanda = await resComanda.json();
 
@@ -504,7 +588,21 @@
                 ? 'block' : 'none';
         });
     }
+	
+	function mostrarToast(msg, color) {
+	    const t = document.createElement('div');
+	    t.textContent = msg;
+	    t.style.cssText = `
+	        position: fixed; bottom: 24px; right: 24px;
+	        padding: 14px 20px; border-radius: 8px;
+	        font-size: 14px; font-weight: 600;
+	        background: ${color}; color: white; z-index: 999;
+	    `;
+	    document.body.appendChild(t);
+	    setTimeout(() => t.remove(), 2000);
+	}
 </script>
+
 
 </body>
 </html>

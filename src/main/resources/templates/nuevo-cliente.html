@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Cliente</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f3f5f8;
+            min-height: 100vh;
+            color: #1f2937;
+        }
+        .navbar {
+            background: #ffffff;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #661B0A;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
+        }
+        .navbar h1 { color: #661B0A; font-size: 18px; }
+        .btn-back {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .btn-back:hover { color: #661B0A; }
+        .container {
+            max-width: 560px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 32px;
+            border-top: 3px solid #661B0A;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #661B0A;
+            margin-bottom: 24px;
+        }
+        .form-group { margin-bottom: 18px; }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #4b5563;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 11px 14px;
+            background: #eef1f5;
+            border: 1px solid #cfd6df;
+            border-radius: 8px;
+            color: #1f2937;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #1e3a5f;
+        }
+        .hint {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .btn-guardar {
+            width: 100%;
+            padding: 13px;
+            background: #1e3a5f;
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn-guardar:hover    { background: #2b4f80; }
+        .btn-guardar:disabled { background: #9db0c8; cursor: not-allowed; }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            color: white;
+            z-index: 999;
+        }
+
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* Ajustes de paleta clara para estilos en línea (sin modificar el HTML) */
+        .navbar span[style*="#cccccc"] { color: #4b5563 !important; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="/caja" class="btn-back">← Volver</a>
+        <h1>Nuevo Cliente</h1>
+    </div>
+    <span style="color:#cccccc; font-size:14px;"
+          th:text="${empleado.nombre}">Admin</span>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>👤 Registrar cliente</h2>
+
+        <div class="form-group">
+            <label>Identificación * (RUC / Cédula)</label>
+            <input type="text" id="identificacion"
+                   placeholder="Ej: 1234567890"
+                   maxlength="20"/>
+            <span class="error-msg" id="errIdentificacion">
+                La identificación es obligatoria
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>Nombre completo *</label>
+            <input type="text" id="nombre"
+                   placeholder="Ej: Juan Pérez"/>
+            <span class="error-msg" id="errNombre">
+                El nombre es obligatorio
+            </span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="tel" id="telefono"
+                       placeholder="Ej: 0991234567"
+                       maxlength="20"/>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email"
+                       placeholder="Ej: juan@gmail.com"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" id="direccion"
+                   placeholder="Ej: Av. Principal 123"/>
+            <span class="hint">Requerida para facturación</span>
+        </div>
+
+        <button class="btn-guardar" id="btnGuardar"
+                onclick="guardar()">
+            Registrar cliente
+        </button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    async function guardar() {
+        const identificacion = document.getElementById('identificacion').value.trim();
+        const nombre         = document.getElementById('nombre').value.trim();
+        const telefono       = document.getElementById('telefono').value.trim();
+        const email          = document.getElementById('email').value.trim();
+        const direccion      = document.getElementById('direccion').value.trim();
+
+        // Validación
+        document.getElementById('errIdentificacion').style.display =
+            !identificacion ? 'block' : 'none';
+        document.getElementById('errNombre').style.display =
+            !nombre ? 'block' : 'none';
+
+        if (!identificacion || !nombre) return;
+
+        const btn = document.getElementById('btnGuardar');
+        btn.disabled    = true;
+        btn.textContent = 'Registrando...';
+
+        try {
+            const res = await fetch('/api/clientes', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    identificacion,
+                    nombre,
+                    telefono:  telefono  || null,
+                    email:     email     || null,
+                    direccion: direccion || null
+                })
+            });
+
+            if (res.ok) {
+                mostrarToast('✅ Cliente registrado', '#1a1a1a');
+                setTimeout(() => window.location.href = '/admin', 1500);
+            } else {
+                const err = await res.json();
+                throw new Error(err.error || 'Error del servidor');
+            }
+        } catch (err) {
+            btn.disabled    = false;
+            btn.textContent = 'Registrar cliente';
+            mostrarToast('❌ ' + (err.message || 'Error al guardar'), '#e74c3c');
+        }
+    }
+
+    function mostrarToast(msg, color) {
+        const t = document.getElementById('toast');
+        t.textContent      = msg;
+        t.style.background = color;
+        t.style.display    = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+</script>
+</body>
+</html>

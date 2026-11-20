@@ -12,5 +12,6 @@ public record ComandaResponse(
     Long mesaId,
     Integer numeroMesa,
     Long empleadoId,
-    String nombreEmpleado
+    String nombreEmpleado,
+    String servicio 
 ) {}

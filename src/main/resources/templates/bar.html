@@ -9,74 +9,67 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #1a1a2e;
+            background: #f3f5f8;
             min-height: 100vh;
-            color: #ecf0f1;
+            color: #1f2937;
         }
 
         .navbar {
-            background: #16213e;
+            background: #ffffff;
             padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #8e44ad;
+            border-bottom: 2px solid #7a2410;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .navbar h1 { color: #9b59b6; font-size: 20px; }
+        .navbar h1 { color: #661B0A; font-size: 20px; }
 
         .reloj {
-            color: #e2b04a;
+            color: #661B0A;
             font-size: 18px;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
 
         .layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
             padding: 24px;
             height: calc(100vh - 54px);
+            overflow-y: auto;
         }
 
-        .columna h2 {
+        .layout h2 {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 16px;
             padding: 10px 14px;
             border-radius: 8px;
-        }
-
-        .col-pendiente h2 {
-            background: rgba(231, 76, 60, 0.15);
-            color: #e74c3c;
-            border: 1px solid #e74c3c;
-        }
-
-        .col-preparacion h2 {
-            background: rgba(142, 68, 173, 0.15);
-            color: #9b59b6;
-            border: 1px solid #9b59b6;
+            background: rgba(102, 27, 10, 0.15);
+            color: #661B0A;
+            border: 1px solid #661B0A;
+            display: inline-block;
         }
 
         .comandas-lista {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 16px;
-            overflow-y: auto;
-            height: calc(100% - 60px);
         }
 
         .comanda-card {
-            background: #16213e;
+            background: #ffffff;
             border-radius: 12px;
             padding: 16px;
-            border-left: 4px solid transparent;
+            border-left: 5px solid #999999;
+            transition: border-color 0.4s ease;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .comanda-card.pendiente   { border-left-color: #e74c3c; }
-        .comanda-card.preparacion { border-left-color: #9b59b6; }
+        /* Semáforo de tiempo de espera */
+        .comanda-card.tiempo-verde    { border-left-color: #27ae60; }
+        .comanda-card.tiempo-amarillo { border-left-color: #661B0A; }
+        .comanda-card.tiempo-rojo     { border-left-color: #e74c3c; }
 
         .comanda-header {
             display: flex;
@@ -88,17 +81,41 @@
         .comanda-mesa {
             font-size: 18px;
             font-weight: 700;
-            color: #e2b04a;
+            color: #661B0A;
         }
 
-        .comanda-tiempo { font-size: 12px; color: #7f8c8d; }
+        .comanda-tiempo {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: right;
+        }
+
+        .comanda-tiempo .transcurrido {
+            display: block;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .comanda-tiempo.tiempo-verde    .transcurrido { color: #27ae60; }
+        .comanda-tiempo.tiempo-amarillo .transcurrido { color: #661B0A; }
+        .comanda-tiempo.tiempo-rojo     .transcurrido { color: #e74c3c; }
+
+        .badge-estado {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 4px;
+            background: rgba(31, 41, 55, 0.08);
+            color: #4b5563;
+        }
 
         .item-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             padding: 8px 0;
-            border-bottom: 1px solid #0f3460;
+            border-bottom: 1px solid #dfe4ea;
             font-size: 14px;
         }
 
@@ -107,17 +124,17 @@
         .item-nombre { font-weight: 600; }
 
         .item-cant {
-            background: #0f3460;
+            background: #eef1f5;
             padding: 2px 10px;
             border-radius: 12px;
             font-size: 13px;
-            color: #9b59b6;
+            color: #661B0A;
             font-weight: 700;
         }
 
         .item-notas {
             font-size: 12px;
-            color: #7f8c8d;
+            color: #6b7280;
             margin-top: 4px;
         }
 
@@ -126,17 +143,20 @@
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 10px;
-            background: rgba(142, 68, 173, 0.2);
-            color: #9b59b6;
+            background: rgba(102, 27, 10, 0.2);
+            color: #661B0A;
             margin-left: 6px;
         }
 
         .vacio {
             text-align: center;
-            color: #7f8c8d;
+            color: #6b7280;
             padding: 40px;
             font-size: 14px;
         }
+
+        /* Ajustes de paleta clara para estilos en línea (sin modificar el HTML) */
+        .navbar span[style*="#cccccc"] { color: #4b5563 !important; }
     </style>
 </head>
 <body>
@@ -145,7 +165,7 @@
     <h1>🍹 Pantalla de Bar</h1>
     <div style="display:flex; align-items:center; gap:20px;">
         <span class="reloj" id="reloj">00:00:00</span>
-        <span style="color:#bdc3c7; font-size:14px;"
+        <span style="color:#cccccc; font-size:14px;"
               th:text="${empleado.nombre}">Bartender</span>
         <a href="/logout" style="color:#e74c3c; text-decoration:none;
            font-size:13px; border:1px solid #e74c3c; padding:5px 12px;
@@ -155,80 +175,44 @@
 
 <div class="layout">
 
-    <!-- Columna PENDIENTES -->
-    <div class="columna col-pendiente">
-        <h2>🔴 Pendientes
-            (<span th:text="${#lists.size(pendientes)}">0</span>)
-        </h2>
-        <div class="comandas-lista">
-            <div th:if="${#lists.isEmpty(pendientes)}" class="vacio">
-                No hay pedidos pendientes
-            </div>
-            <div th:each="c : ${pendientes}"
-                 class="comanda-card pendiente">
-                <div class="comanda-header">
-                    <span class="comanda-mesa"
-                          th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
-                    <span class="comanda-tiempo"
-                          th:text="${#temporals.format(c.fecha, 'HH:mm')}">
-                        12:30
-                    </span>
-                </div>
-                <!-- Solo muestra ítems del bar -->
-                <div th:each="d : ${c.detalles}"
-                     th:if="${d.producto.estacion.name() == 'bar'}"
-                     class="item-row">
-                    <div>
-                        <div class="item-nombre">
-                            <span th:text="${d.producto.nombre}">Mojito</span>
-                            <span class="badge-bebida">bar</span>
-                        </div>
-                        <div class="item-notas"
-                             th:if="${d.notas != null and !d.notas.isEmpty()}"
-                             th:text="${d.notas}">Sin azúcar</div>
-                    </div>
-                    <span class="item-cant"
-                          th:text="'x' + ${d.cantidad}">x1</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h2>📋 Comandas activas
+        (<span th:text="${#lists.size(comandas)}">0</span>)
+    </h2>
 
-    <!-- Columna EN PREPARACIÓN -->
-    <div class="columna col-preparacion">
-        <h2>🟣 Preparando
-            (<span th:text="${#lists.size(enPreparacion)}">0</span>)
-        </h2>
-        <div class="comandas-lista">
-            <div th:if="${#lists.isEmpty(enPreparacion)}" class="vacio">
-                No hay pedidos en preparación
+    <div class="comandas-lista">
+        <div th:if="${#lists.isEmpty(comandas)}" class="vacio">
+            No hay pedidos activos
+        </div>
+        <div th:each="c : ${comandas}"
+             class="comanda-card"
+             th:attr="data-fecha=${c.fecha}">
+            <div class="comanda-header">
+                <span class="comanda-mesa"
+                      th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
+                <span class="comanda-tiempo">
+                    <span th:text="${#temporals.format(c.fecha, 'HH:mm')}">12:30</span>
+                    <span class="transcurrido">--</span>
+                </span>
             </div>
-            <div th:each="c : ${enPreparacion}"
-                 class="comanda-card preparacion">
-                <div class="comanda-header">
-                    <span class="comanda-mesa"
-                          th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
-                    <span class="comanda-tiempo"
-                          th:text="${#temporals.format(c.fecha, 'HH:mm')}">
-                        12:30
-                    </span>
-                </div>
-                <!-- Solo muestra ítems del bar -->
-                <div th:each="d : ${c.detalles}"
-                     th:if="${d.producto.estacion.name() == 'bar'}"
-                     class="item-row">
-                    <div>
-                        <div class="item-nombre">
-                            <span th:text="${d.producto.nombre}">Mojito</span>
-                            <span class="badge-bebida">bar</span>
-                        </div>
-                        <div class="item-notas"
-                             th:if="${d.notas != null and !d.notas.isEmpty()}"
-                             th:text="${d.notas}">Sin azúcar</div>
+            <span class="badge-estado"
+                  th:text="${c.estado.name() == 'pendiente' ? 'Pendiente' : 'En preparación'}">
+                Pendiente
+            </span>
+            <!-- Solo muestra ítems del bar -->
+            <div th:each="d : ${c.detalles}"
+                 th:if="${d.producto.estacion.name() == 'bar'}"
+                 class="item-row" style="margin-top:8px;">
+                <div>
+                    <div class="item-nombre">
+                        <span th:text="${d.producto.nombre}">Mojito</span>
+                        <span class="badge-bebida">bar</span>
                     </div>
-                    <span class="item-cant"
-                          th:text="'x' + ${d.cantidad}">x1</span>
+                    <div class="item-notas"
+                         th:if="${d.notas != null and !d.notas.isEmpty()}"
+                         th:text="${d.notas}">Sin azúcar</div>
                 </div>
+                <span class="item-cant"
+                      th:text="'x' + ${d.cantidad}">x1</span>
             </div>
         </div>
     </div>
@@ -242,8 +226,40 @@
     setInterval(actualizarReloj, 1000);
     actualizarReloj();
 
+    // Umbrales del semáforo de tiempo de espera (en minutos)
+    const UMBRAL_AMARILLO_MIN = 10;
+    const UMBRAL_ROJO_MIN = 15;
+
+    function colorPorTiempo(minutos) {
+        if (minutos >= UMBRAL_ROJO_MIN) return 'tiempo-rojo';
+        if (minutos >= UMBRAL_AMARILLO_MIN) return 'tiempo-amarillo';
+        return 'tiempo-verde';
+    }
+
+    function actualizarSemaforos() {
+        document.querySelectorAll('.comanda-card[data-fecha]').forEach(card => {
+            const fecha = new Date(card.dataset.fecha);
+            if (isNaN(fecha.getTime())) return;
+
+            const minutos = Math.floor((Date.now() - fecha.getTime()) / 60000);
+            const clase = colorPorTiempo(minutos);
+
+            card.classList.remove('tiempo-verde', 'tiempo-amarillo', 'tiempo-rojo');
+            card.classList.add(clase);
+
+            const tiempoEl = card.querySelector('.comanda-tiempo');
+            tiempoEl.classList.remove('tiempo-verde', 'tiempo-amarillo', 'tiempo-rojo');
+            tiempoEl.classList.add(clase);
+
+            const transcurridoEl = card.querySelector('.transcurrido');
+            transcurridoEl.textContent = minutos <= 0 ? 'recién llegada' : ('hace ' + minutos + ' min');
+        });
+    }
+    actualizarSemaforos();
+    setInterval(actualizarSemaforos, 15000);
+
     setInterval(() => location.reload(), 30000);
 </script>
-
+<div th:replace="~{fragments/notificaciones-mesero :: notificacionesPedidoNuevo('bar')}"></div>
 </body>
 </html>

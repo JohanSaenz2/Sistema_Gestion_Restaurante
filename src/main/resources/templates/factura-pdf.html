@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+       
+        @page {
+            size: 50mm 210mm;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada: clave para alinear columnas */
+            width: 100%;              
+            max-width: 100%;
+            margin: 0;                
+            padding: 2mm 1.5mm 10mm 1.5mm; 
+            font-size: 8pt;           
+            line-height: 1.25;
+            color: #000000;
+            background-color: #ffffff;
+            text-align: left;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .text-center { text-align: left; }
+        .text-right { text-align: right; }
+        .bold { font-weight: bold; }
+
+        /* Separador tipo "línea punteada" con texto para mantener compatibilidad en cualquier DPI */
+        .linea-separadora {
+            margin: 1.5mm 0;
+            font-size: 8pt;
+            line-height: 1;
+            text-align: left;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: -0.3px;
+        }
+        .linea-separadora::before {
+            content: "--------------------------------";
+        }
+
+        /* Titulo del comprobante */
+        .titulo-comprobante {
+            text-align: left;
+            font-size: 9.5pt;
+            font-weight: bold;
+            margin-bottom: 1mm;
+        }
+
+        .emisor-bloque {
+            font-size: 8pt;
+        }
+
+        .emisor-nombre {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .comprobante-info {
+            font-size: 8pt;
+        }
+
+        /* Datos de cliente */
+        .datos-bloque {
+            font-size: 8pt;
+        }
+
+        /* Tabla de Productos */
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1mm 0;
+            table-layout: fixed; /* Evita que las columnas se descuadren */
+        }
+
+        table.items th {
+            font-size: 7.5pt;
+            font-weight: normal;
+            text-align: left;
+            padding: 0.5mm 0;
+        }
+
+        table.items th.item-precio,
+        table.items th.item-total {
+            text-align: right;
+        }
+
+        table.items td {
+            padding: 0.5mm 0;
+            font-size: 8pt;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        table.items tr {
+            page-break-inside: avoid;
+        }
+
+        table.items td.item-cant {
+            width: 14%;
+        }
+
+        table.items td.item-nombre {
+            width: 52%;
+        }
+
+        table.items td.item-precio,
+        table.items td.item-total {
+            width: 17%;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .producto-notas {
+            font-size: 7.5pt;
+            font-style: italic;
+            padding-left: 1.5mm;
+        }
+
+        /* Tabla de Totales */
+        table.totales {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5mm;
+        }
+
+        table.totales td {
+            padding: 0.3mm 0;
+            font-size: 8pt;
+        }
+
+        .fila-total td {
+            font-size: 9.5pt;
+            font-weight: bold;
+            border-top: 1px solid #000;
+            padding-top: 1mm;
+        }
+
+        .footer {
+            margin-top: 1.5mm;
+            text-align: left;
+            font-size: 7.5pt;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TITULO DEL COMPROBANTE -->
+    <div class="titulo-comprobante" th:text="${tipoComprobanteTexto}">Factura Electrónica</div>
+
+    <!-- DATOS DEL EMISOR (RESTAURANTE) -->
+    <div class="emisor-bloque">
+        <div class="emisor-nombre" >Tablita Grill</div>
+        <div >R.U.C.: 175381543001</div>
+        <div >Dirección del local:</div>
+		<div >Checa/ Parque Ecologico</div>
+    </div>
+
+    <div class="linea-separadora"></div>
+
+    <!-- DATOS DEL COMPROBANTE -->
+    <div class="comprobante-info">
+        <div th:text="'Número: ' + ${comprobante.numero}">Número: 001-100-000000001</div>
+        <div th:text="'Emisión: ' + ${#temporals.format(comprobante.fechaEmision, 'yyyy-MM-dd')}">Emisión: 2026-01-01</div>
+    </div>
+
+    <div class="linea-separadora"></div>
+
+    <!-- DATOS DE MESA Y CLIENTE -->
+    <div class="datos-bloque">
+        <div><strong>Mesa:</strong> <span th:text="${comanda.mesa.numero}">1</span></div>
+        <div><strong>Cliente:</strong> <span th:text="${comprobante.cliente != null ? comprobante.cliente.nombre : 'Consumidor final'}">Consumidor final</span></div>
+        <div th:if="${comprobante.cliente != null}" th:text="'Identificación: ' + ${comprobante.cliente.identificacion}">Identificación: 0000000000</div>
+    </div>
+
+    <div class="linea-separadora"></div>
+
+    <!-- LISTA DE PRODUCTOS -->
+    <table class="items">
+        <thead>
+            <tr>
+                <th class="item-cant">Cnt.</th>
+                <th>Descripción</th>
+                <th class="item-precio">P.Un</th>
+                <th class="item-total">Tot</th>
+            </tr>
+        </thead>
+        <tbody>
+            <th:block th:each="d : ${comanda.detalles}">
+                <tr>
+                    <td class="item-cant" th:text="${#numbers.formatDecimal(d.cantidad, 1, 2)}">1.00</td>
+                    <td class="item-nombre" th:text="${d.producto.codigo}">Hamburguesa</td>
+                    <td class="item-precio" th:text="${#numbers.formatDecimal(d.producto.precioBase, 1, 2)}">8.00</td>
+                    <td class="item-total" th:text="${#numbers.formatDecimal(d.cantidad * d.producto.precioBase, 1, 2)}">8.00</td>
+                </tr>
+            </th:block>
+        </tbody>
+    </table>
+
+    <div class="linea-separadora"></div>
+
+    <!-- TOTALES SIMPLIFICADOS -->
+    <table class="totales">
+        <tr class="fila-total">
+            <td>TOTAL:</td>
+            <td class="text-right" th:text="${#numbers.formatDecimal(comprobante.total, 1, 2)}">0.00</td>
+        </tr>
+    </table>
+
+    <div class="linea-separadora"></div>
+
+    <!-- PIE DE PAGINA -->
+    <div class="footer">
+        <div>¡Gracias por su consumo!</div>
+		<div>TRADICION, FUEGO Y SABOR</div>
+        <br/><br/> <!-- Espacio extra para avance de papel físico -->
+    </div>
+
+</body>
+</html>

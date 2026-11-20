@@ -2,9 +2,11 @@ package com.restaurante.Sistema.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,9 +38,24 @@ public class AdicionalesController {
 		return repo.findById(id)
 				.orElseThrow(() -> new RecursoNoEncontradoException("Adicional " + id + " no encontrado"));
 	}
-	
+
 	@PostMapping
 	public Adicionales create(@RequestBody Adicionales adi) {
 		return repo.save(adi);
-		}
+	}
+
+	@PutMapping("/{id}")
+	public Adicionales actualizar(@PathVariable Long id, @RequestBody Adicionales datos) {
+		Adicionales a = repo.findById(id)
+				.orElseThrow(() -> new RecursoNoEncontradoException("Adicional " + id + " no encontrado"));
+		a.setNombre(datos.getNombre());
+		a.setPrecio(datos.getPrecio());
+		a.setAplicaA(datos.getAplicaA());
+		return repo.save(a);
+	}
+
+	@DeleteMapping("/{id}")
+	public void eliminar(@PathVariable Long id) {
+		repo.deleteById(id);
+	}
 }

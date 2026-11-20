@@ -24,19 +24,14 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class ComprobanteService {
 
-	private static final String PAQUETE_FACTORIES = "com.restaurante.Sistema.patrones.factory";
-
 	private final FactoryGen factory;
 	private final ImpuestoConfig impuestoConfig;
 	private final ComprobanteRepository comprobanteRepo;
 	private final ComandaRepository comandaRepo;
 	private final ClienteRepository clienteRepo;
 
-	public ComprobanteService(FactoryGen factory,
-			ImpuestoConfig impuestoConfig,
-			ComprobanteRepository comprobanteRepo,
-			ComandaRepository comandaRepo,
-			ClienteRepository clienteRepo) {
+	public ComprobanteService(FactoryGen factory, ImpuestoConfig impuestoConfig, ComprobanteRepository comprobanteRepo,
+			ComandaRepository comandaRepo, ClienteRepository clienteRepo) {
 		this.factory = factory;
 		this.impuestoConfig = impuestoConfig;
 		this.comprobanteRepo = comprobanteRepo;
@@ -44,14 +39,8 @@ public class ComprobanteService {
 		this.clienteRepo = clienteRepo;
 	}
 
-	@PostConstruct
-	void registrarFactories() {
-		factory.init(PAQUETE_FACTORIES);
-	}
-
-
 	@Transactional
-	public ComprobanteResponse generar(Long comandaId, TipoComprobante tipo, Long clienteId) {
+	public ComprobanteResponse generar(Long comandaId, TipoComprobante tipo, Long clienteId, BigDecimal ivaPorcentaje) {
 		Comanda comanda = comandaRepo.findById(comandaId)
 				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + comandaId + " no encontrada"));
 
@@ -60,22 +49,14 @@ public class ComprobanteService {
 						.orElseThrow(() -> new RecursoNoEncontradoException("Cliente " + clienteId + " no encontrado"));
 
 		ComprobanteFactory f = factory.crear(tipo.name());
-		f.setTasaIva(impuestoConfig.getIva());
+		f.setTasaIva(ivaPorcentaje != null ? ivaPorcentaje : impuestoConfig.getIva());
 
 		Comprobante c = f.crear(comanda, cliente);
 		comprobanteRepo.save(c);
-		return new ComprobanteResponse( c.getId(),
-		        c.getComanda().getId(),
-		        c.getCliente() != null ? c.getCliente().getClienteID() : null,
-		        c.getCliente() != null ? c.getCliente().getNombre() : "Consumidor final",
-		        c.getCliente() != null ? c.getCliente().getIdentificacion() : null,
-		        c.getTipo(),
-		        c.getNumero(),
-		        c.getSubtotal(),
-		        c.getDescuento(),
-		        c.getIva(),
-		        c.getPropina(),
-		        c.getTotal(),
-		        c.getFechaEmision());
+		return new ComprobanteResponse(c.getId(), c.getComanda().getId(),
+				c.getCliente() != null ? c.getCliente().getClienteID() : null,
+				c.getCliente() != null ? c.getCliente().getNombre() : "Consumidor final",
+				c.getCliente() != null ? c.getCliente().getIdentificacion() : null, c.getTipo(), c.getNumero(),
+				c.getSubtotal(), c.getDescuento(), c.getIva(), c.getPropina(), c.getTotal(), c.getFechaEmision());
 	}
 }

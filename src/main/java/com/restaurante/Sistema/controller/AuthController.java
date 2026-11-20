@@ -1,6 +1,5 @@
 package com.restaurante.Sistema.controller;
 
-import com.restaurante.Sistema.Enum.RolEmpleados;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.repository.EmpleadoRepository;
 import jakarta.servlet.http.HttpSession;

@@ -1,4 +1,3 @@
-// service/ComandaService.java
 package com.restaurante.Sistema.service;
 
 import java.math.BigDecimal;
@@ -8,11 +7,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.restaurante.Sistema.Enum.EstadoComanda;
+import com.restaurante.Sistema.Enum.EstadoItem;
 import com.restaurante.Sistema.Enum.EstadoMesa;
+import com.restaurante.Sistema.Enum.Estacion;
 import com.restaurante.Sistema.dto.ComandaRequest;
 import com.restaurante.Sistema.dto.ComandaResponse;
 import com.restaurante.Sistema.exception.RecursoNoEncontradoException;
 import com.restaurante.Sistema.model.Comanda;
+import com.restaurante.Sistema.model.DetalleComanda;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.model.Mesa;
 import com.restaurante.Sistema.repository.ComandaRepository;
@@ -25,11 +27,15 @@ public class ComandaService {
 	private final ComandaRepository repo;
 	private final MesaRepository mesaRepo;
 	private final EmpleadoRepository emplRepo;
+	private final DetalleComandaService detaServi;
 
-	public ComandaService(ComandaRepository repo, MesaRepository mesaRepo, EmpleadoRepository emplRepo) {
+	public ComandaService(ComandaRepository repo, MesaRepository mesaRepo, EmpleadoRepository emplRepo,
+			DetalleComandaService detaServi) {
+		super();
 		this.repo = repo;
 		this.mesaRepo = mesaRepo;
 		this.emplRepo = emplRepo;
+		this.detaServi = detaServi;
 	}
 
 	public List<ComandaResponse> listarTodas() {
@@ -45,12 +51,25 @@ public class ComandaService {
 		return repo.findByEstado(estado);
 	}
 
+	public List<Comanda> activas() {
+		List<Comanda> activas = new java.util.ArrayList<>();
+		activas.addAll(repo.findByEstado(EstadoComanda.pendiente));
+		activas.sort(java.util.Comparator.comparing(Comanda::getFecha));
+		return activas;
+	}
+
+	public List<Comanda> activasPorEstacion(Estacion estacion) {
+		return activas().stream()
+				.filter(c -> c.getDetalles().stream().anyMatch(d -> d.getProducto().getEstacion() == estacion))
+				.toList();
+	}
+
 	public ComandaResponse crear(ComandaRequest comanda2) {
 
 		Mesa mesa = mesaRepo.findById(comanda2.mesaId())
 				.orElseThrow(() -> new RecursoNoEncontradoException("Mesa " + comanda2.mesaId() + " no encontrada"));
-		Empleado empleado = emplRepo.findById(comanda2.empleadoId())
-				.orElseThrow(() -> new RecursoNoEncontradoException("Empleado " + comanda2.empleadoId() + " no encontrado"));
+		Empleado empleado = emplRepo.findById(comanda2.empleadoId()).orElseThrow(
+				() -> new RecursoNoEncontradoException("Empleado " + comanda2.empleadoId() + " no encontrado"));
 
 		Comanda comanda = new Comanda();
 		comanda.setMesa(mesa);
@@ -69,7 +88,7 @@ public class ComandaService {
 
 	private ComandaResponse toResponse(Comanda c) {
 		return new ComandaResponse(c.getId(), c.getEstado(), c.getTotal(), c.getFecha(), c.getMesa().getMesaId(),
-				c.getMesa().getNumero(), c.getEmpleado().getId(), c.getEmpleado().getNombre());
+				c.getMesa().getNumero(), c.getEmpleado().getId(), c.getEmpleado().getNombre(),c.getServicio());
 	}
 
 	public Comanda avanzarEstado(Long id) {
@@ -77,7 +96,22 @@ public class ComandaService {
 				.orElseThrow(() -> new RecursoNoEncontradoException("Comanda " + id + " no encontrada"));
 
 		switch (comanda.getEstado()) {
-		case pendiente -> comanda.setEstado(EstadoComanda.entregada);
+		case pendiente -> {
+		    comanda.setEstado(EstadoComanda.entregada);
+		    for (DetalleComanda d : comanda.getDetalles()) {
+		        EstadoItem estado = d.getEstado();
+
+		        if (estado == EstadoItem.cancelado
+		                || estado == EstadoItem.listo
+		                || estado == EstadoItem.entregado) {
+		            continue; 
+		        }
+		        if (estado == EstadoItem.pendiente) {
+		            detaServi.enviarACocina(d.getId());
+		        }
+		        detaServi.marcarListo(d.getId());
+		    }
+		}
 		case entregada -> {
 			comanda.setEstado(EstadoComanda.pagada);
 			liberarMesa(comanda.getMesa());

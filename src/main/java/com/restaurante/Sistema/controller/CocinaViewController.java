@@ -1,6 +1,5 @@
 package com.restaurante.Sistema.controller;
 
-import com.restaurante.Sistema.Enum.EstadoComanda;
 import com.restaurante.Sistema.model.Empleado;
 import com.restaurante.Sistema.service.ComandaService;
 import jakarta.servlet.http.HttpSession;
@@ -21,11 +20,8 @@ public class CocinaViewController {
     public String cocina(Model model, HttpSession session) {
         Empleado empleado = (Empleado) session.getAttribute("empleado");
         model.addAttribute("empleado", empleado);
-        // Solo comandas pendientes y en preparación
-        model.addAttribute("pendientes",
-            comandaService.porEstado(EstadoComanda.pendiente));
-        model.addAttribute("enPreparacion",
-            comandaService.porEstado(EstadoComanda.en_preparacion));
+        model.addAttribute("comandas",
+            comandaService.activasPorEstacion(com.restaurante.Sistema.Enum.Estacion.cocina));
         return "cocina";
     }
 }

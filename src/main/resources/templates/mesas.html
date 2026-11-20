@@ -9,27 +9,28 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #1a1a2e;
+            background: #f3f5f8;
             min-height: 100vh;
-            color: #ecf0f1;
+            color: #1f2937;
         }
 
         .navbar {
-            background: #16213e;
+            background: #ffffff;
             padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #e2b04a;
+            border-bottom: 2px solid #661B0A;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
-        .navbar h1 { color: #e2b04a; font-size: 20px; }
+        .navbar h1 { color: #661B0A; font-size: 20px; }
 
         .navbar .info {
             display: flex;
             align-items: center;
             gap: 16px;
-            color: #bdc3c7;
+            color: #4b5563;
             font-size: 14px;
         }
 
@@ -46,6 +47,51 @@
 
         .logout:hover { background: #e74c3c; color: white; }
 
+        /* ── Pestañas ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #dfe4ea;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover { color: #1f2937; }
+
+        .tab-btn.active {
+            color: #1e3a5f;
+            border-bottom-color: #1e3a5f;
+        }
+
+        .tab-badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
         .container {
             padding: 32px 24px;
             max-width: 1100px;
@@ -59,7 +105,7 @@
         }
 
         .subtitulo {
-            color: #7f8c8d;
+            color: #6b7280;
             font-size: 14px;
             margin-bottom: 32px;
         }
@@ -71,7 +117,7 @@
         }
 
         .mesa {
-            background: #16213e;
+            background: #ffffff;
             border-radius: 12px;
             padding: 28px 16px;
             text-align: center;
@@ -81,6 +127,7 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
         }
 
         .mesa:hover { transform: translateY(-4px); }
@@ -90,8 +137,8 @@
         }
 
         .mesa.libre:hover {
-            background: rgba(39, 174, 96, 0.15);
-            border-color: #2ecc71;
+            background: rgba(39, 174, 96, 0.10);
+            border-color: #27ae60;
         }
 
         .mesa.ocupada {
@@ -102,7 +149,7 @@
         }
 
         .mesa.reservada {
-            border-color: #f39c12;
+            border-color: #661B0A;
             opacity: 0.8;
             cursor: not-allowed;
             pointer-events: none;
@@ -111,13 +158,13 @@
         .mesa-numero {
             font-size: 36px;
             font-weight: 700;
-            color: #e2b04a;
+            color: #661B0A;
             margin-bottom: 8px;
         }
 
         .mesa-label {
             font-size: 13px;
-            color: #7f8c8d;
+            color: #6b7280;
             margin-bottom: 12px;
         }
 
@@ -130,8 +177,8 @@
         }
 
         .estado-libre {
-            background: rgba(39, 174, 96, 0.2);
-            color: #2ecc71;
+            background: rgba(39, 174, 96, 0.15);
+            color: #27ae60;
         }
 
         .estado-ocupada {
@@ -140,8 +187,8 @@
         }
 
         .estado-reservada {
-            background: rgba(243, 156, 18, 0.2);
-            color: #f39c12;
+            background: rgba(102, 27, 10, 0.2);
+            color: #661B0A;
         }
 
         .leyenda {
@@ -149,7 +196,7 @@
             gap: 24px;
             margin-top: 32px;
             font-size: 13px;
-            color: #7f8c8d;
+            color: #6b7280;
         }
 
         .leyenda-item {
@@ -166,7 +213,85 @@
 
         .dot-libre    { background: #27ae60; }
         .dot-ocupada  { background: #e74c3c; }
-        .dot-reservada{ background: #f39c12; }
+        .dot-reservada{ background: #661B0A; }
+
+        /* ── Panel de listas para entregar ── */
+        .listas-panel {
+            padding: 24px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .panel-titulo {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .comanda-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid #dfe4ea;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.10);
+        }
+
+        .comanda-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #661B0A;
+        }
+
+        .comanda-hora { color: #6b7280; font-weight: 400; }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #dfe4ea;
+        }
+
+        .item-row:last-child { border-bottom: none; }
+
+        .comanda-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .comanda-total {
+            font-size: 15px;
+            font-weight: 700;
+            color: #661B0A;
+        }
+
+        .btn-entregar {
+            padding: 7px 14px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-entregar:hover { background: #c0392b; }
+
+        .vacio {
+            text-align: center;
+            color: #6b7280;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+
     </style>
 </head>
 <body>
@@ -179,38 +304,143 @@
     </div>
 </nav>
 
-<div class="container">
-    <p class="titulo">Selecciona una mesa</p>
-    <p class="subtitulo">Solo las mesas en estado <strong>libre</strong> están disponibles</p>
+<!-- ── Barra de pestañas ── -->
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab-listas" onclick="cambiarTab('tab-listas', this)">
+        🔵 Listas para entregar
+        <span class="tab-badge" th:text="${#lists.size(listas)}">0</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-mesas" onclick="cambiarTab('tab-mesas', this)">
+        🍽 Mesas
+    </button>
+</div>
 
-    <div class="grid">
-        <!-- Itera sobre todas las mesas -->
-        <a th:each="mesa : ${mesas}"
-           th:href="@{/pedido/{id}(id=${mesa.mesaId})}"
-           th:class="'mesa ' + ${mesa.estado.name().toLowerCase()}"
-           class="mesa">
-
-            <div class="mesa-numero" th:text="${mesa.numero}">1</div>
-            <div class="mesa-label">Mesa</div>
-            <span th:class="'mesa-estado estado-' + ${mesa.estado.name().toLowerCase()}"
-                  th:text="${mesa.estado.name().toLowerCase()}">
-                libre
-            </span>
-        </a>
-    </div>
-
-    <div class="leyenda">
-        <div class="leyenda-item">
-            <div class="dot dot-libre"></div> Libre — disponible
+<!-- ── Pestaña 1: Listas para entregar ── -->
+<div id="tab-listas" class="tab-content active">
+    <div class="listas-panel">
+        <div class="panel-titulo">
+            Comandas listas para entregar
+            (<span th:text="${#lists.size(listas)}">0</span>)
         </div>
-        <div class="leyenda-item">
-            <div class="dot dot-ocupada"></div> Ocupada — en servicio
+
+        <div th:if="${#lists.isEmpty(listas)}" class="vacio">
+            No hay comandas listas
         </div>
-        <div class="leyenda-item">
-            <div class="dot dot-reservada"></div> Reservada
+
+        <div th:each="c : ${listas}"
+             class="comanda-card lista">
+
+            <div class="comanda-header">
+                <span class="comanda-mesa"
+                      th:text="'Mesa ' + ${c.mesa.numero}">Mesa 1</span>
+                <span class="comanda-hora"
+                      th:text="${#temporals.format(c.fecha, 'HH:mm')}">
+                    12:30
+                </span>
+            </div>
+
+            <div th:each="d : ${c.detalles}" class="item-row">
+                <span th:text="${d.producto.nombre}">Hamburguesa</span>
+                <span th:text="'x' + ${d.cantidad}">x1</span>
+            </div>
+
+            <div class="comanda-footer">
+                <span class="comanda-total"
+                      th:text="'$' + ${#numbers.formatDecimal(c.total, 1, 2)}">
+                    $0.00
+                </span>
+                <!-- Botón que avanza el estado a ENTREGADA -->
+                <button class="btn-entregar"
+                        th:attr="data-id=${c.id}"
+                        onclick="marcarEntregada(this)">
+                    ✅ Marcar entregada
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ── Pestaña 2: Mesas ── -->
+<div id="tab-mesas" class="tab-content">
+    <div class="container">
+        <p class="titulo">Selecciona una mesa</p>
+        <p class="subtitulo">Solo las mesas en estado <strong>libre</strong> están disponibles</p>
+
+        <div class="grid">
+            <!-- Itera sobre todas las mesas -->
+            <a th:each="mesa : ${mesas}"
+               th:href="@{/pedido/{id}(id=${mesa.mesaId})}"
+               th:class="'mesa ' + ${mesa.estado.name().toLowerCase()}"
+               class="mesa">
+
+                <div class="mesa-numero" th:text="${mesa.numero}">1</div>
+                <div class="mesa-label">Mesa</div>
+                <span th:class="'mesa-estado estado-' + ${mesa.estado.name().toLowerCase()}"
+                      th:text="${mesa.estado.name().toLowerCase()}">
+                    libre
+                </span>
+            </a>
+        </div>
+
+        <div class="leyenda">
+            <div class="leyenda-item">
+                <div class="dot dot-libre"></div> Libre — disponible
+            </div>
+            <div class="leyenda-item">
+                <div class="dot dot-ocupada"></div> Ocupada — en servicio
+            </div>
+            <div class="leyenda-item">
+                <div class="dot dot-reservada"></div> Reservada
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── Cambiar de pestaña ──
+    function cambiarTab(idTab, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(idTab).classList.add('active');
+        btn.classList.add('active');
+    }
+
+	async function marcarEntregada(btn) {
+	    const id = btn.dataset.id;
+	    btn.disabled    = true;
+	    btn.textContent = '...';
+
+	    try {
+	        const res = await fetch(`/api/comandas/${id}/avanzar`, { method: 'PUT' });
+	        if (!res.ok) {
+	            const errTxt = await res.text();
+	            throw new Error(errTxt || 'Error del servidor');
+	        }
+	        mostrarToast('✅ Comanda marcada como entregada', '#1a1a1a');
+	        setTimeout(() => location.reload(), 1000);
+	    } catch (err) {
+	        btn.disabled    = false;
+	        btn.textContent = '✅ Marcar entregada';
+	        mostrarToast('❌ ' + err.message, '#e74c3c');
+	    }
+	}
+    function mostrarToast(msg, color) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `
+        position: fixed; bottom: 24px; right: 24px;
+        padding: 14px 20px; border-radius: 8px;
+        font-size: 14px; font-weight: 600;
+        background: ${color}; color: white; z-index: 999;
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+}
+
+// Auto-refresco global cada 30 segundos
+setTimeout(() => location.reload(), 30000);
+</script>
+
+
 </body>
-</html>
+</html>>

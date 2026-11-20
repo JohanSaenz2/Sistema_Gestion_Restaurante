@@ -21,6 +21,8 @@ public class Product {
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
+	@Column(name = "codigo")
+	private String codigo;
 	@Column(name = "precio_base", nullable = false)
 	private BigDecimal precioBase;
 
@@ -30,6 +32,5 @@ public class Product {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "estacion", nullable = false)
 	private Estacion estacion;
-
 
 }

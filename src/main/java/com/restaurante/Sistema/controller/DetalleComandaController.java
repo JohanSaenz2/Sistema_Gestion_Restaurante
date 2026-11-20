@@ -1,4 +1,3 @@
-// controller/DetalleComandaController.java
 package com.restaurante.Sistema.controller;
 
 import com.restaurante.Sistema.Enum.Estacion;

@@ -1,4 +1,3 @@
-// patrones/strategy/ContextoPago.java
 package com.restaurante.Sistema.patrones.strategy;
 
 import org.springframework.stereotype.Component;
